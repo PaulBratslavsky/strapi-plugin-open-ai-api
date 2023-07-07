@@ -23,4 +23,16 @@ module.exports = ({ strapi }) => ({
     }
   },
 
+  async createEmbedding(ctx) {
+    try {
+      console.log('from create embedding controller', ctx);
+    } catch (error) {
+      ctx.throw(500, error);
+    }
+  },
+  async updateEmbedding(ctx) {},
+  async deleteEmbedding(ctx) {},
+  async getEmbedding(ctx) {},
+  async getEmbeddings(ctx) {},
+
 });

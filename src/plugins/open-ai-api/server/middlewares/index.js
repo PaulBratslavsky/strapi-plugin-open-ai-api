@@ -1,3 +1,8 @@
 'use strict';
 
-module.exports = {};
+
+const embedding = require("./embeddings-middleware");
+
+module.exports = {
+  embedding
+};

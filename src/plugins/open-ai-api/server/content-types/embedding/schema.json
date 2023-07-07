@@ -1,0 +1,28 @@
+{
+  "kind": "collectionType",
+  "collectionName": "embeddings",
+  "info": {
+    "singularName": "embedding",
+    "pluralName": "embeddings",
+    "displayName": "embedding "
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {
+    "content-manager": {
+      "visible": true
+    },
+    "content-type-builder": {
+      "visible": false
+    }
+  },
+  "attributes": {
+    "title": {
+      "type": "string"
+    },
+    "content": {
+      "type": "richtext"
+    }
+  }
+}

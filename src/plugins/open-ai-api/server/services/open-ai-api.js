@@ -11,4 +11,11 @@ module.exports = ({strapi}) => ({
   async getSettings() {
     return await strapi.entityService.findMany("plugin::open-ai-api.setting");
   },
+
+
+  async createEmbedding(ctx) {},
+  async updateEmbedding(ctx) {},
+  async deleteEmbedding(ctx) {},
+  async getEmbedding(ctx) {},
+  async getEmbeddings(ctx) {},
 })
