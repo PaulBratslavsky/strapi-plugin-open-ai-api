@@ -36,14 +36,14 @@ module.exports = {
       },
     },
     {
-      method: 'GET',
+      method: 'POST',
       path: '/embeddings/create-embedding',
       handler: 'openAiApi.createEmbedding',
       config: {
         policies: [
           {
             name: 'admin::hasPermissions',
-            config: { actions: ['plugin::open-ai-api.read'] }
+            config: { actions: ['plugin::open-ai-api.create'] }
           },
         ]
       },

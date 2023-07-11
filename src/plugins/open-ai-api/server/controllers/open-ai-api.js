@@ -25,7 +25,10 @@ module.exports = ({ strapi }) => ({
 
   async createEmbedding(ctx) {
     try {
-      console.log('from create embedding controller', ctx);
+      return await strapi
+        .plugin('open-ai-api')
+        .service('embeddings')
+        .createEmbedding(ctx.request.body);
     } catch (error) {
       ctx.throw(500, error);
     }

@@ -1,8 +1,7 @@
 // @ts-nocheck
 import React, { useState, useEffect } from "react";
-import { useFetchClient } from '@strapi/helper-plugin';
+import { useFetchClient, CheckPagePermissions  } from '@strapi/helper-plugin';
 
-import { CheckPagePermissions } from "@strapi/helper-plugin";
 import {
   ContentLayout,
   Main,

@@ -1,9 +1,9 @@
 'use strict';
 
-const myService = require('./my-service');
 const openAiApi = require('./open-ai-api');
+const embeddings = require('./embeddings');
 
 module.exports = {
-  myService,
   openAiApi,
+  embeddings,
 };

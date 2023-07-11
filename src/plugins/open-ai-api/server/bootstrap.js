@@ -1,5 +1,6 @@
 'use strict';
 
+
 module.exports = async ({ strapi }) => {
   const actions = [
     {
@@ -12,6 +13,12 @@ module.exports = async ({ strapi }) => {
       section: 'plugins',
       displayName: 'Update',
       uid: 'update',
+      pluginName: 'open-ai-api',
+    },
+    {
+      section: 'plugins',
+      displayName: 'Create',
+      uid: 'create',
       pluginName: 'open-ai-api',
     },
   ];
