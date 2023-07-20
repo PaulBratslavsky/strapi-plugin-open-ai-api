@@ -9,6 +9,7 @@
     "displayName": "Open Ai Api"
   },
   "dependencies": {
+    "@pinecone-database/pinecone": "^0.1.6",
     "@strapi/design-system": "^1.6.3",
     "@strapi/helper-plugin": "^4.6.0",
     "@strapi/icons": "^1.6.3",

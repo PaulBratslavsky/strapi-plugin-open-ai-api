@@ -17,6 +17,7 @@ export default function Embeddings() {
   const { post } = useFetchClient();
   const [input, setInput] = React.useState("");
   const [markdown, setMarkdown] = React.useState("**Hello world!!!**");
+  const [error, setError] = React.useState();
   const [isLoading, setIsLoading] = React.useState(false);
   const history = useHistory();
 
@@ -24,6 +25,11 @@ export default function Embeddings() {
     if (isLoading === false) setIsLoading(true);
     await await post("/open-ai-api/embeddings/create-embedding", { data: { title: input, content: markdown }});
   };
+
+  function handleMarkdownChange(value) {
+    if (value.length > 4000) setError("Chunk size limit reached");
+    setMarkdown(value);
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -36,6 +42,7 @@ export default function Embeddings() {
   return (
     <div className="container">
       <Header link={"/plugins/" + pluginId + "/"} title="Embeddings" subtitle="Create Embeddings" />
+      <h1>Chunk Size: {markdown.length}</h1>
       <Box padding={8}>
         <form onSubmit={handleSubmit}>
           <fieldset disabled={isLoading}>
@@ -43,14 +50,17 @@ export default function Embeddings() {
               placeholder="Title"
               label="Title"
               name="input"
-              error={input.length > 5 ? "input is too long" : undefined}
+              error={input.length > 55 ? "input is too long" : undefined}
               onChange={(e) => setInput(e.target.value)}
               value={input}
             />
             <div data-color-mode="light">
-              <StyledMDEditor value={markdown} onChange={setMarkdown} />
+              <StyledMDEditor value={markdown} onChange={handleMarkdownChange} />
+              <div>
+                {error && <p>{error}</p>}
+              </div>
             </div>
-            <Button type="submit" disabled={isLoading}>
+            <Button type="submit" disabled={ isLoading || error }>
               {isLoading ? "Creating Embeddings" : "Create Embeddings"}
             </Button>
           </fieldset>

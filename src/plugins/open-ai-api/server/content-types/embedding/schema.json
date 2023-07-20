@@ -21,11 +21,14 @@
     "title": {
       "type": "string"
     },
-    "content": {
-      "type": "richtext"
+    "embeddingsId": {
+      "type": "string"
     },
     "embeddings": {
       "type": "json"
+    },
+    "content": {
+      "type": "richtext"
     }
   }
 }

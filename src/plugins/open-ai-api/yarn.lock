@@ -518,6 +518,13 @@
   dependencies:
     "@lezer/common" "^1.0.0"
 
+"@pinecone-database/pinecone@^0.1.6":
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/@pinecone-database/pinecone/-/pinecone-0.1.6.tgz#13374ae9462c8eea0dc26683cafeddc4e7c0375f"
+  integrity sha512-tCnVc28udecthhgSBTdcMhYEW+xsR++AdZasp+ZE/AvUD1hOR2IR3edjk9m0sDxZyvXbno2KeqUbLIOZr7sCTw==
+  dependencies:
+    cross-fetch "^3.1.5"
+
 "@radix-ui/number@^1.0.0":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@radix-ui/number/-/number-1.0.1.tgz#644161a3557f46ed38a042acf4a770e826021674"
@@ -1238,6 +1245,11 @@ character-reference-invalid@^2.0.0:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/character-reference-invalid/-/character-reference-invalid-2.0.1.tgz#85c66b041e43b47210faf401278abf808ac45cb9"
   integrity sha512-iBZ4F4wRbyORVsu0jPV7gXkOsGYjGHPmAyv+HiHG8gi5PtC9KI2j1+v8/tlibRvjoWX027ypmG/n0HtO5t7unw==
+
+chromadb@^1.5.3:
+  version "1.5.3"
+  resolved "https://registry.yarnpkg.com/chromadb/-/chromadb-1.5.3.tgz#554b427b090b48b445b73ac40ee06fb84c6c0b1f"
+  integrity sha512-oQYs3cbSJJiSMYipL/5btX8U3bnW5X1CEMpJnl83XEGWR0uvRp8GtoznKPKPTcuVBMMtKkE1MdeMckWA72M4lw==
 
 codemirror@^6.0.0:
   version "6.0.1"

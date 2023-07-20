@@ -6,19 +6,28 @@
  *
  */
 
-import React from 'react';
-import { Switch, Route } from 'react-router-dom';
-import { AnErrorOccurred } from '@strapi/helper-plugin';
-import pluginId from '../../pluginId';
-import HomePage from '../HomePage';
-import Embeddings from '../Embeddings';
+import React from "react";
+import { Switch, Route } from "react-router-dom";
+import { AnErrorOccurred } from "@strapi/helper-plugin";
+import pluginId from "../../pluginId";
+import HomePage from "../HomePage";
+import Embeddings from "../Embeddings";
+import EmbeddingDetails from "../EmbeddingDetails";
 
 const App = () => {
   return (
     <div>
       <Switch>
         <Route path={`/plugins/${pluginId}`} component={HomePage} exact />
-        <Route path={`/plugins/${pluginId}/embeddings`} component={Embeddings} exact />
+        <Route
+          path={`/plugins/${pluginId}/embeddings`}
+          component={Embeddings}
+          exact
+        />
+        <Route
+          path={`/plugins/${pluginId}/embeddings/:id`}
+          component={EmbeddingDetails}
+        />
         <Route component={AnErrorOccurred} />
       </Switch>
     </div>

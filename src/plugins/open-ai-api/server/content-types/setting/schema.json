@@ -12,7 +12,7 @@
   },
   "pluginOptions": {
     "content-manager": {
-      "visible": false
+      "visible": true
     },
     "content-type-builder": {
       "visible": false
@@ -20,6 +20,12 @@
   },
   "attributes": {
     "apiKey": {
+      "type": "string"
+    },
+    "pineConeApiKey": {
+      "type": "string"
+    },
+    "pineConeApiEnv": {
       "type": "string"
     }
   }

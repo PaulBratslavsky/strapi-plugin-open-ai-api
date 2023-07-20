@@ -1,5 +1,6 @@
 // @ts-nocheck
-import React from "react";
+import React, { useEffect } from "react";
+import { useHistory } from "react-router-dom";
 
 import {
   Box,
@@ -19,6 +20,7 @@ import { ArrowLeft } from "@strapi/icons";
 export default function PluginTable({ data }) {
   const ROW_COUNT = 6;
   const COL_COUNT = 10;
+  const history = useHistory();
 
   return (
     <Box padding={8} background="neutral100">
@@ -36,6 +38,9 @@ export default function PluginTable({ data }) {
             </Th>
             <Th>
               <Typography variant="sigma">Content</Typography>
+            </Th>
+            <Th>
+              <Typography variant="sigma">Embeddings ID</Typography>
             </Th>
             <Th>
               <Typography variant="sigma">Embeddings</Typography>
@@ -64,18 +69,23 @@ export default function PluginTable({ data }) {
                   </Td>
                   <Td>
                     <Typography textColor="neutral800">
-                      {entry.content.slice(0, 50)}...
+                      {entry.content && entry.content.slice(0, 50)}...
                     </Typography>
                   </Td>
                   <Td>
                     <Typography textColor="neutral800">
-                      {entry.embeddings.slice(0, 25)}...
+                      {entry.embeddingsId && entry.embeddingsId}
+                    </Typography>
+                  </Td>
+                  <Td>
+                    <Typography textColor="neutral800">
+                      {entry.embeddings && entry.embeddings.slice(0, 25)}...
                     </Typography>
                   </Td>
                   <Td>
                     <Flex>
                       <ArrowLeft
-                        onClick={() => console.log("edit")}
+                        onClick={() => history.push(`embeddings/${entry.id}`)}
                         label="Edit"
                         noBorder
                       />

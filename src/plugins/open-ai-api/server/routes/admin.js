@@ -48,5 +48,18 @@ module.exports = {
         ]
       },
     },
+    {
+      method: 'DELETE',
+      path: '/embeddings/delete-embedding/:id',
+      handler: 'openAiApi.deleteEmbedding',
+      config: {
+        policies: [
+          {
+            name: 'admin::hasPermissions',
+            config: { actions: ['plugin::open-ai-api.delete'] }
+          },
+        ]
+      },
+    },
   ]
 };
