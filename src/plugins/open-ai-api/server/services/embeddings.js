@@ -11,16 +11,7 @@ async function getSettings() {
 module.exports = ({ strapi }) => ({
   async createEmbedding(data) {
     const settings = await getSettings();
-
-    const db = await pluginManager.initializePinecone(
-      settings.pineConeApiEnv,
-      settings.pineConeApiKey
-    );
-
-    const embeddings = await pluginManager.initializeEmbeddings(
-      settings.apiKey
-    );
-
+    const plugin = await pluginManager.initialize(settings);
     const randomId = uuidv4();
 
     const docs = [
@@ -30,44 +21,20 @@ module.exports = ({ strapi }) => ({
       }),
     ];
 
-    const pineconeIndex = db.index;
-
-    // await PineconeStore.fromDocuments(docs, embeddings, {
-    //   pineconeIndex,
-    // });
-
-    // const vectorStore = await PineconeStore.fromExistingIndex(embeddings, {
-    //   pineconeIndex,
-    // });
-
-    // const createdEmbeddings = await vectorStore.similaritySearch(
-    //   "pinecone",
-    //   undefined,
-    //   {
-    //     id: randomId,
-    //   }
-    // );
-
     const toJason = JSON.stringify(docs);
-    const pineconeStore = new PineconeStore(embeddings, { pineconeIndex });
-    const ids = await pineconeStore.addDocuments(docs);
-
+    const ids = await plugin.piniconeStore.addDocuments(docs);
     data.data.embeddingsId = ids[0];
     data.data.embeddings = toJason;
 
-    return await strapi.entityService.create("plugin::open-ai-api.embedding", data );
+    return await strapi.entityService.create(
+      "plugin::open-ai-api.embedding",
+      data
+    );
   },
 
   async deleteEmbedding(params) {
     const settings = await getSettings();
-
-    const db = await pluginManager.initializePinecone(
-      settings.pineConeApiEnv,
-      settings.pineConeApiKey
-    );
-    const embeddings = await pluginManager.initializeEmbeddings(
-      settings.apiKey
-    );
+    const plugin = await pluginManager.initialize(settings);
 
     const currentEntry = await strapi.entityService.findOne(
       "plugin::open-ai-api.embedding",
@@ -75,16 +42,13 @@ module.exports = ({ strapi }) => ({
     );
 
     const ids = [currentEntry.embeddingsId];
-    const pineconeIndex = db.index;
-    const pineconeStore = new PineconeStore(embeddings, { pineconeIndex });
-    await pineconeStore.delete({ ids: ids });
+    await plugin.piniconeStore.delete({ ids: ids });
     const delEntryResponse = await strapi.entityService.delete(
       "plugin::open-ai-api.embedding",
       params.id
     );
 
-    console.log(delEntryResponse, "DELETE");
-    return { message: "ok" };
+    return delEntryResponse;
   },
   async getEmbedding(ctx) {},
   async getEmbeddings(ctx) {},

@@ -1,6 +1,7 @@
 const { OpenAI } = require("langchain/llms/openai");
 const { OpenAIEmbeddings } = require("langchain/embeddings/openai");
 const { PineconeClient } = require("@pinecone-database/pinecone");
+const { PineconeStore } = require("langchain/vectorstores/pinecone");
 
 function hasValidKeys(obj) {
   const requiredKeys = ["apiKey", "projectName", "environment"];
@@ -14,42 +15,29 @@ class PluginManager {
   constructor() {
     this.model = null;
     this.embeddings = null;
-    this.pinecone = new PineconeClient();
     this.index = null;
+    this.piniconeStore = null;
+    this.pinecone = null;
   }
 
-  async initializePinecone(environment, apiKey) {
+  async initializePinecone(pineconeEnv, pineconeKey, indexName) {
     if (this.pinecone && this.index)
       return { pinecone: this.pinecone, index: this.index };
-
     try {
-      await this.pinecone.init({ environment: environment, apiKey: apiKey });
-      this.index = this.pinecone.Index("strapi-plugin"); // TODO: SET THIS IN SETTINGS
-      return { pinecone: this.pinecone, index: this.index };
+      this.pinecone = new PineconeClient();
+      await this.pinecone.init({ environment: pineconeEnv, apiKey: pineconeKey });
+      this.index = this.pinecone.Index(indexName);
+      return { pinecone: this.pinecone, index: this.index, piniconeStore: this.piniconeStore };
     } catch (error) {
       console.error(`Failed to initialize Pinecone: ${error}`);
     }
   }
 
-  async initializeModel(apiKey) {
-    if (this.model) return this.model
-    try {
-      const model = new OpenAI({
-        openAIApiKey: apiKey,
-        modelName: "gpt-3.5-turbo",
-      });
-      this.model = model;
-      return this.model;
-    } catch (error) {
-      console.error(`Failed to initialize Model: ${error}`);
-    }
-  }
-
-  async initializeEmbeddings(apiKey) {
-    if(this.embeddings) return this.embeddings
+  async initializeEmbeddings(openAIApiKey) {
+    if (this.embeddings) return this.embeddings;
     try {
       const config = {
-        openAIApiKey: apiKey,
+        openAIApiKey: openAIApiKey,
         model: "text-embedding-ada-002",
         maxTokens: 8000,
       };
@@ -59,6 +47,40 @@ class PluginManager {
       return this.embeddings;
     } catch (error) {
       console.error(`Failed to initialize Embeddings: ${error}`);
+    }
+  }
+
+  async initializePineconeStore() {
+    if (this.piniconeStore) return this.piniconeStore;
+    try {
+      this.piniconeStore = new PineconeStore(this.embeddings, {
+        pineconeIndex: this.index,
+      });
+      return this.piniconeStore;
+    } catch (error) {
+      console.error(`Failed to initialize Pinecone Store: ${error}`);
+    }
+  }
+
+  async initialize(settings) {
+    await this.initializePinecone(settings.pineConeApiEnv, settings.pineConeApiKey, "strapi-plugin");
+    await this.initializeEmbeddings(settings.apiKey);
+    await this.initializePineconeStore();
+    return { pinecone: this.pinecone, pineconeIndex: this.index, piniconeStore: this.piniconeStore };
+  }
+
+
+  async initializeModel(apiKey) {
+    if (this.model) return this.model;
+    try {
+      const model = new OpenAI({
+        openAIApiKey: apiKey,
+        modelName: "gpt-3.5-turbo",
+      });
+      this.model = model;
+      return this.model;
+    } catch (error) {
+      console.error(`Failed to initialize Model: ${error}`);
     }
   }
 
@@ -79,6 +101,13 @@ class PluginManager {
       throw new Error("Embeddings are not initialized");
     }
     return this.embeddings;
+  }
+
+  async getPineconeStore() {
+    if (!this.piniconeStore) {
+      throw new Error("Pinecone Store is not initialized");
+    }
+    return this.piniconeStore;
   }
 }
 

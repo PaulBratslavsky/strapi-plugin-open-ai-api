@@ -1246,11 +1246,6 @@ character-reference-invalid@^2.0.0:
   resolved "https://registry.yarnpkg.com/character-reference-invalid/-/character-reference-invalid-2.0.1.tgz#85c66b041e43b47210faf401278abf808ac45cb9"
   integrity sha512-iBZ4F4wRbyORVsu0jPV7gXkOsGYjGHPmAyv+HiHG8gi5PtC9KI2j1+v8/tlibRvjoWX027ypmG/n0HtO5t7unw==
 
-chromadb@^1.5.3:
-  version "1.5.3"
-  resolved "https://registry.yarnpkg.com/chromadb/-/chromadb-1.5.3.tgz#554b427b090b48b445b73ac40ee06fb84c6c0b1f"
-  integrity sha512-oQYs3cbSJJiSMYipL/5btX8U3bnW5X1CEMpJnl83XEGWR0uvRp8GtoznKPKPTcuVBMMtKkE1MdeMckWA72M4lw==
-
 codemirror@^6.0.0:
   version "6.0.1"
   resolved "https://registry.yarnpkg.com/codemirror/-/codemirror-6.0.1.tgz#62b91142d45904547ee3e0e0e4c1a79158035a29"

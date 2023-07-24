@@ -1,6 +1,7 @@
 // @ts-nocheck
-import React, { useEffect } from "react";
+import React from "react";
 import { useHistory } from "react-router-dom";
+import pluginId from "../../pluginId";
 
 import {
   Box,
@@ -85,7 +86,11 @@ export default function PluginTable({ data }) {
                   <Td>
                     <Flex>
                       <ArrowLeft
-                        onClick={() => history.push(`embeddings/${entry.id}`)}
+                        onClick={() =>
+                          history.push(
+                            "/plugins/" + pluginId + "/embeddings/" + entry.id
+                          )
+                        }
                         label="Edit"
                         noBorder
                       />
