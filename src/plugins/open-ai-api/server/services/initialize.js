@@ -62,19 +62,11 @@ class PluginManager {
     }
   }
 
-  async initialize(settings) {
-    await this.initializePinecone(settings.pineConeApiEnv, settings.pineConeApiKey, "strapi-plugin");
-    await this.initializeEmbeddings(settings.apiKey);
-    await this.initializePineconeStore();
-    return { pinecone: this.pinecone, pineconeIndex: this.index, piniconeStore: this.piniconeStore };
-  }
-
-
-  async initializeModel(apiKey) {
+  async initializeModel(openAIApiKey) {
     if (this.model) return this.model;
     try {
       const model = new OpenAI({
-        openAIApiKey: apiKey,
+        openAIApiKey: openAIApiKey,
         modelName: "gpt-3.5-turbo",
       });
       this.model = model;
@@ -83,6 +75,20 @@ class PluginManager {
       console.error(`Failed to initialize Model: ${error}`);
     }
   }
+
+  async initialize(settings) {
+    await this.initializePinecone(settings.pineConeApiEnv, settings.pineConeApiKey, "strapi-plugin");
+    await this.initializeEmbeddings(settings.apiKey);
+    await this.initializePineconeStore();
+    await this.initializeModel(settings.apiKey);
+    return { pinecone: this.pinecone, pineconeIndex: this.index, piniconeStore: this.piniconeStore, model: this.model };
+  }
+}
+
+module.exports = new PluginManager();
+
+
+/*
 
   async getModel() {
     if (!this.model) {
@@ -109,6 +115,5 @@ class PluginManager {
     }
     return this.piniconeStore;
   }
-}
 
-module.exports = new PluginManager();
+*/

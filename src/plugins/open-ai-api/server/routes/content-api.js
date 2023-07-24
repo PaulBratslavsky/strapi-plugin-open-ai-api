@@ -9,5 +9,10 @@ module.exports = {
         policies: [],
       },
     },
+    {
+      method: 'POST',
+      path: '/embeddings-query',
+      handler: 'openAiApi.queryEmbeddings',
+    }
   ]
 };

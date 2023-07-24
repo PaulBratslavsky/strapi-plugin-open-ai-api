@@ -1,7 +1,8 @@
 // @ts-nocheck
 const pluginManager = require("./initialize");
-const { PineconeStore } = require("langchain/vectorstores/pinecone");
 const { Document } = require("langchain/document");
+const { VectorDBQAChain } = require("langchain/chains");
+
 const { v4: uuidv4 } = require("uuid");
 
 async function getSettings() {
@@ -31,7 +32,6 @@ module.exports = ({ strapi }) => ({
       data
     );
   },
-
   async deleteEmbedding(params) {
     const settings = await getSettings();
     const plugin = await pluginManager.initialize(settings);
@@ -49,6 +49,19 @@ module.exports = ({ strapi }) => ({
     );
 
     return delEntryResponse;
+  },
+  async queryEmbeddings(query) {
+    const querySearch = query.data.query;
+    const settings = await getSettings();
+    const plugin = await pluginManager.initialize(settings);
+    
+    const chain = VectorDBQAChain.fromLLM(plugin.model, pluginManager.piniconeStore, {
+      k: 1,
+      returnSourceDocuments: true,
+    });
+
+    const response = await chain.call({ query: querySearch});
+    return response;
   },
   async getEmbedding(ctx) {},
   async getEmbeddings(ctx) {},

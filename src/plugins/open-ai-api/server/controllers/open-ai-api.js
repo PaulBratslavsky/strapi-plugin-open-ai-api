@@ -43,6 +43,16 @@ module.exports = ({ strapi }) => ({
       ctx.throw(500, error);
     }
   },
+  async queryEmbeddings(ctx) {
+    try {
+      return await strapi
+        .plugin('open-ai-api')
+        .service('embeddings')
+        .queryEmbeddings(ctx.request.body);
+    } catch (error) {
+      ctx.throw(500, error);
+    }
+  },
   async updateEmbedding(ctx) {},
   async getEmbedding(ctx) {},
   async getEmbeddings(ctx) {},
