@@ -36,15 +36,13 @@ const HomePage = () => {
   useEffect(() => {
     async function fetchData() {
       const data = await get("/content-manager/collection-types/plugin::open-ai-api.embedding");
-      console.log(data)
       setData(data.data);
     }
     fetchData();
   }, []);
 
   if (data.length > 0) return <EmptyState />;
-  const { results, pagination } = data;
-  console.log(results, pagination);
+  const { results } = data;
 
   return (
     <Box padding={8} background="neutral100">

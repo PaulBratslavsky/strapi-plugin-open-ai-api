@@ -1,8 +1,8 @@
 // @ts-nocheck
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
-import { useFetchClient } from "@strapi/helper-plugin";
 import qs from "qs";
+import { useFetchClient } from "@strapi/helper-plugin";
 
 import {
   Button,
@@ -42,19 +42,31 @@ const ResponseText = styled.div`
   height: 400px;
   background: inherit;
   overflow-y: scroll;
+  scroll-behavior: smooth;
 `;
 
 export default function ChatModal() {
   const { get } = useFetchClient();
+  const ref = useRef(null);
+
   const [isVisible, setIsVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [data, setData] = useState([]);
 
+  useEffect(() => {
+    if (ref.current) {
+      ref.current.scrollTop = ref.current.scrollHeight;
+    }
+  }, [data]);
+
   async function handleQueryEmbeddings(e) {
     e.preventDefault();
     if (isLoading === false) setIsLoading(true);
-    const response = await get("/open-ai-api/embeddings/embeddings-query?" + qs.stringify({ query: inputValue }));
+    const response = await get(
+      "/open-ai-api/embeddings/embeddings-query?" +
+        qs.stringify({ query: inputValue })
+    );
     setData((prev) => [...prev, response.data]);
     setInputValue("");
     setIsLoading(false);
@@ -63,8 +75,8 @@ export default function ChatModal() {
   function showResponse(data) {
     return data.map((item, index) => {
       return (
-        <Box padding={1}>
-          <Typography key={index}>{item.text}</Typography>
+        <Box key={index} padding={1}>
+          <Typography>{item.text}</Typography>
         </Box>
       );
     });
@@ -91,7 +103,7 @@ export default function ChatModal() {
           <ModalBody>
             {data.length > 0 && (
               <Box padding={1}>
-                <ResponseText>{showResponse(data)}</ResponseText>
+                <ResponseText ref={ref}>{showResponse(data)}</ResponseText>
               </Box>
             )}
             <Box padding={1}>

@@ -11,7 +11,7 @@ import { Switch, Route } from "react-router-dom";
 import { AnErrorOccurred } from "@strapi/helper-plugin";
 import pluginId from "../../pluginId";
 import HomePage from "../HomePage";
-import Embeddings from "../Embeddings";
+import CreateEmbeddings from "../CreateEmbeddings";
 import EmbeddingDetails from "../EmbeddingDetails";
 import ChatModal from '../../components/ChatModal';
 
@@ -22,7 +22,7 @@ const App = () => {
         <Route path={`/plugins/${pluginId}`} component={HomePage} exact />
         <Route
           path={`/plugins/${pluginId}/embeddings`}
-          component={Embeddings}
+          component={CreateEmbeddings}
           exact
         />
         <Route

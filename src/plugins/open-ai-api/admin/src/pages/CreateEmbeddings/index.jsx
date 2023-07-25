@@ -13,7 +13,7 @@ const StyledMDEditor = styled(MDEditor)`
   margin-bottom: 1rem;
 `;
 
-export default function Embeddings() {
+export default function CreateEmbeddings() {
   const { post } = useFetchClient();
   const [input, setInput] = React.useState("");
   const [markdown, setMarkdown] = React.useState("Enter text here");
@@ -59,10 +59,11 @@ export default function Embeddings() {
               onChange={(e) => setInput(e.target.value)}
               value={input}
             />
-            <div data-color-mode="light">
+            <div data-color-mode="light" >
               <StyledMDEditor
                 value={markdown}
                 onChange={handleMarkdownChange}
+                height={400}
               />
               <div>{error && <p>{error}</p>}</div>
             </div>

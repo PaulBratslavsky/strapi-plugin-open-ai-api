@@ -236,8 +236,6 @@ const SettingsForm = () => {
     await updateData();
   }
 
-  console.log("apiKey", apiKey, "option", option);
-
   return (
     <Box
       background="neutral0"

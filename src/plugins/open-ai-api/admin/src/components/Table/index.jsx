@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from "react";
-import { useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import pluginId from "../../pluginId";
 
 import {
@@ -20,7 +20,6 @@ import { ArrowLeft } from "@strapi/icons";
 export default function PluginTable({ data }) {
   const ROW_COUNT = 6;
   const COL_COUNT = 10;
-  const history = useHistory();
 
   return (
     <Box padding={8} background="neutral100">
@@ -50,7 +49,6 @@ export default function PluginTable({ data }) {
         <Tbody>
           {data &&
             data.map((entry) => {
-              console.log(entry);
               return (
                 <Tr key={entry.id}>
                   <Td>
@@ -78,15 +76,9 @@ export default function PluginTable({ data }) {
                   </Td>
                   <Td>
                     <Flex>
-                      <ArrowLeft
-                        onClick={() =>
-                          history.push(
-                            "/plugins/" + pluginId + "/embeddings/" + entry.id
-                          )
-                        }
-                        label="Edit"
-                        noBorder
-                      />
+                      <Link to={"/plugins/" + pluginId + "/embeddings/" + entry.id} >
+                        <ArrowLeft />
+                      </Link>
                     </Flex>
                   </Td>
                 </Tr>
