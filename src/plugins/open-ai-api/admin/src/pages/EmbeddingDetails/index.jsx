@@ -43,8 +43,8 @@ export default function EmbeddingDetails() {
     <div className="container">
       <Header
         link={"/plugins/" + pluginId + "/"}
-        title="Embeddings"
-        subtitle="Create Embeddings"
+        title="Manage Embeddings"
+        subtitle="Manage your embeddings"
       />
       <Box padding={8}>
         <h1>Embeddings Details: {params.id}</h1>

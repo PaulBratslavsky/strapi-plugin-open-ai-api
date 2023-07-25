@@ -23,7 +23,7 @@ export default function Embeddings() {
 
   const createEmbeddings = async () => {
     if (isLoading === false) setIsLoading(true);
-    await await post("/open-ai-api/embeddings/create-embedding", {
+    await post("/open-ai-api/embeddings/create-embedding", {
       data: { title: input, content: markdown },
     });
   };

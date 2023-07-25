@@ -27,6 +27,12 @@ module.exports = async ({ strapi }) => {
       uid: 'delete',
       pluginName: 'open-ai-api',
     },
+    {
+      section: 'plugins',
+      displayName: 'Chat',
+      uid: 'chat',
+      pluginName: 'open-ai-api',
+    },
   ];
 
   await strapi.admin.services.permission.actionProvider.registerMany(actions);

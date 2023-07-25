@@ -13,6 +13,7 @@ import pluginId from "../../pluginId";
 import HomePage from "../HomePage";
 import Embeddings from "../Embeddings";
 import EmbeddingDetails from "../EmbeddingDetails";
+import ChatModal from '../../components/ChatModal';
 
 const App = () => {
   return (
@@ -30,6 +31,7 @@ const App = () => {
         />
         <Route component={AnErrorOccurred} />
       </Switch>
+      <ChatModal />
     </div>
   );
 };

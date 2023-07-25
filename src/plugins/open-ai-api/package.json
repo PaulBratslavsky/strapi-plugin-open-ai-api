@@ -16,6 +16,7 @@
     "@uiw/react-md-editor": "^3.23.3",
     "langchain": "^0.0.106",
     "prop-types": "^15.7.2",
+    "qs": "^6.11.2",
     "rehype-sanitize": "^5.0.1"
   },
   "devDependencies": {

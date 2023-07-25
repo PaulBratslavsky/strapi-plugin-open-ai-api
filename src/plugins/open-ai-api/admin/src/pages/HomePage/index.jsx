@@ -36,6 +36,7 @@ const HomePage = () => {
   useEffect(() => {
     async function fetchData() {
       const data = await get("/content-manager/collection-types/plugin::open-ai-api.embedding");
+      console.log(data)
       setData(data.data);
     }
     fetchData();

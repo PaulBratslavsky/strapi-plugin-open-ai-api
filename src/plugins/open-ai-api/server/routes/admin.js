@@ -61,5 +61,18 @@ module.exports = {
         ]
       },
     },
+    {
+      method: 'GET',
+      path: '/embeddings/embeddings-query',
+      handler: 'openAiApi.queryEmbeddings',
+      config: {
+        policies: [
+          {
+            name: 'admin::hasPermissions',
+            config: { actions: ['plugin::open-ai-api.chat'] }
+          },
+        ]
+      },
+    }
   ]
 };

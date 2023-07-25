@@ -10,7 +10,7 @@ module.exports = {
       },
     },
     {
-      method: 'POST',
+      method: 'GET',
       path: '/embeddings-query',
       handler: 'openAiApi.queryEmbeddings',
     }

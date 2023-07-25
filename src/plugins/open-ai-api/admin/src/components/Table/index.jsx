@@ -11,7 +11,6 @@ import {
   Tr,
   Th,
   Td,
-  BaseCheckbox,
   Typography,
   VisuallyHidden,
   Flex,
@@ -28,9 +27,6 @@ export default function PluginTable({ data }) {
       <Table colCount={COL_COUNT} rowCount={ROW_COUNT}>
         <Thead>
           <Tr>
-            <Th>
-              <BaseCheckbox aria-label="Select all entries" />
-            </Th>
             <Th>
               <Typography variant="sigma">ID</Typography>
             </Th>
@@ -57,9 +53,6 @@ export default function PluginTable({ data }) {
               console.log(entry);
               return (
                 <Tr key={entry.id}>
-                  <Td>
-                    <BaseCheckbox aria-label={`Select ${entry.contact}`} />
-                  </Td>
                   <Td>
                     <Typography textColor="neutral800">{entry.id}</Typography>
                   </Td>
