@@ -12,7 +12,6 @@ export default function EmbeddingDetails() {
   const { del, get } = useFetchClient();
 
   const [data, setData] = useState({});
-  const [error, setError] = React.useState();
   const [isLoading, setIsLoading] = React.useState(false);
 
   useEffect(() => {
@@ -52,7 +51,7 @@ export default function EmbeddingDetails() {
       </Box>
       <Box padding={8}>
         <form onSubmit={handleSubmit}>
-          <Button type="submit" disabled={isLoading || error}>
+          <Button type="submit" disabled={isLoading}>
             {isLoading ? "Deleting Embeddings" : "Delete Embeddings"}
           </Button>
         </form>

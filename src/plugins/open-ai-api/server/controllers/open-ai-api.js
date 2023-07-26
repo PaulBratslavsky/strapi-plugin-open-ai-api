@@ -75,7 +75,7 @@ module.exports = ({ strapi }) => ({
     try {
       return await strapi.entityService.findOne(
         contentType.uid,
-        ctx.params,
+        ctx.params.id,
         sanitizedQueryParams
       );
     } catch (error) {

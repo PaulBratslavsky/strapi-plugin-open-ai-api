@@ -76,8 +76,8 @@ module.exports = {
     },
     {
       method: 'GET',
-      path: '/embeddings/find',
-      handler: 'openAiApi.getEmbeddings',
+      path: '/embeddings/find/:id',
+      handler: 'openAiApi.getEmbedding',
       config: {
         policies: [
           {
@@ -89,7 +89,7 @@ module.exports = {
     },
     {
       method: 'GET',
-      path: '/embeddings/find/:id',
+      path: '/embeddings/find',
       handler: 'openAiApi.getEmbeddings',
       config: {
         policies: [
@@ -99,6 +99,6 @@ module.exports = {
           },
         ]
       },
-    }
+    },
   ]
 };
