@@ -93,7 +93,7 @@ export default function EmbeddingDetails() {
   }
 
   return (
-    <div>
+    <Box padding={8}>
       <Header
         link={"/plugins/" + pluginId + "/"}
         title={data.title || "Embeddings Details"}
@@ -108,6 +108,6 @@ export default function EmbeddingDetails() {
       <Box padding={8}>
         <ConfirmDeleteEmbedding callback={handleDelete} />
       </Box>
-    </div>
+    </Box>
   );
 }

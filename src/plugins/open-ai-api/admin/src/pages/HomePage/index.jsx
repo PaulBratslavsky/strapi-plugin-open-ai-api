@@ -51,7 +51,7 @@ const HomePage = () => {
   if (data.length === 0) return <EmptyState />;
 
   return (
-    <Box padding={8} background="neutral100">
+    <Box padding={8}>
       <Header
         link="/"
         buttonLink={"/plugins/" + pluginId + "/embeddings"}

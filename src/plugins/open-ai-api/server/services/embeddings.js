@@ -20,20 +20,27 @@ module.exports = ({ strapi }) => ({
     const plugin = await pluginManager.initialize(settings);
     const randomId = uuidv4();
 
+    const entity = await strapi.entityService.create(
+      "plugin::open-ai-api.embedding",
+      data
+    );
+
     const docs = [
       new Document({
-        metadata: { id: randomId },
+        metadata: { id: entity.id, title: entity.title },
         pageContent: data.data.content,
       }),
     ];
-
+  
     const toJason = JSON.stringify(docs);
     const ids = await plugin.pineconeStore.addDocuments(docs);
+    
     data.data.embeddingsId = ids[0];
     data.data.embeddings = toJason;
 
-    return await strapi.entityService.create(
+    return await strapi.entityService.update(
       "plugin::open-ai-api.embedding",
+      entity.id,
       data
     );
   },

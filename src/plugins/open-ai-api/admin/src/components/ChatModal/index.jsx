@@ -1,18 +1,22 @@
 // @ts-nocheck
 import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
+import pluginId from "../../pluginId";
+import { useHistory } from "react-router-dom";
 import qs from "qs";
+
 import { useFetchClient } from "@strapi/helper-plugin";
 
 import {
+  Link,
   Button,
   Typography,
   IconButton,
   Box,
   TextInput,
-} from "@strapi/design-system";
-
-import {
+  Accordion,
+  AccordionToggle,
+  AccordionContent,
   ModalLayout,
   ModalBody,
   ModalHeader,
@@ -25,6 +29,12 @@ const StyledIconButton = styled(IconButton)`
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
+`;
+
+const StyledTypography = styled(Typography)`
+  display: block;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 `;
 
 const ResponseText = styled.div`
@@ -45,9 +55,32 @@ const ResponseText = styled.div`
   scroll-behavior: smooth;
 `;
 
+function AccordionDetails({ title, content, children }) {
+  const [expanded, setExpanded] = useState(false);
+  return (
+    <Box padding={1} background={"primary100"}>
+      <Accordion
+        expanded={expanded}
+        onToggle={() => setExpanded((s) => !s)}
+        id="acc-1"
+        size="S"
+      >
+        <AccordionToggle title={title} />
+        <AccordionContent>
+          <Box padding={3}>
+            <Typography>{content}</Typography>
+            {children && <Box padding={1}>{children}</Box>}
+          </Box>
+        </AccordionContent>
+      </Accordion>
+    </Box>
+  );
+}
+
 export default function ChatModal() {
   const { get } = useFetchClient();
   const ref = useRef(null);
+  const history = useHistory();
 
   const [isVisible, setIsVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -59,6 +92,11 @@ export default function ChatModal() {
       ref.current.scrollTop = ref.current.scrollHeight;
     }
   }, [data]);
+
+  function redirect(id) {
+    setIsVisible(false);
+    history.push("/plugins/" + pluginId + "/embeddings/" + id);
+  }
 
   async function handleQueryEmbeddings(e) {
     e.preventDefault();
@@ -74,9 +112,27 @@ export default function ChatModal() {
 
   function showResponse(data) {
     return data.map((item, index) => {
+      console.log(item.sourceDocuments[0].pageContent);
       return (
-        <Box key={index} padding={1}>
-          <Typography>{item.text}</Typography>
+        <Box key={index}>
+          <Box padding={1}>
+            <StyledTypography>{item.text}</StyledTypography>
+          </Box>
+
+          {item.sourceDocuments.map((doc, index) => {
+            console.log(doc);
+            return (
+              <AccordionDetails
+                key={index}
+                title="Original Source Document"
+                content={doc.pageContent}
+              >
+                <Link onClick={() => redirect(doc.metadata.id)}>
+                  View Source for {doc.metadata.title}
+                </Link>
+              </AccordionDetails>
+            );
+          })}
         </Box>
       );
     });
