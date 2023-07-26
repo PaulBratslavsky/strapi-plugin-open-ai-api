@@ -17,9 +17,7 @@ export default function EmbeddingDetails() {
 
   useEffect(() => {
     async function fetchData() {
-      const data = await get(
-        `/content-manager/collection-types/plugin::open-ai-api.embedding/${params.id}`
-      );
+      const data = await get(`/open-ai-api/embeddings/find/${params.id}`);
       setData(data.data);
     }
     fetchData();

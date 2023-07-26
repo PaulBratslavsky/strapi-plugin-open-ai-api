@@ -73,6 +73,32 @@ module.exports = {
           },
         ]
       },
+    },
+    {
+      method: 'GET',
+      path: '/embeddings/find',
+      handler: 'openAiApi.getEmbeddings',
+      config: {
+        policies: [
+          {
+            name: 'admin::hasPermissions',
+            config: { actions: ['plugin::open-ai-api.read'] }
+          },
+        ]
+      },
+    },
+    {
+      method: 'GET',
+      path: '/embeddings/find/:id',
+      handler: 'openAiApi.getEmbeddings',
+      config: {
+        policies: [
+          {
+            name: 'admin::hasPermissions',
+            config: { actions: ['plugin::open-ai-api.read'] }
+          },
+        ]
+      },
     }
   ]
 };

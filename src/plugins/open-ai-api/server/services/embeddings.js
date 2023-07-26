@@ -2,9 +2,8 @@
 const pluginManager = require("./initialize");
 const { Document } = require("langchain/document");
 const { VectorDBQAChain } = require("langchain/chains");
-const { errors } = require('@strapi/utils');
-const { ApplicationError } = errors;
-
+const { errors } = require("@strapi/utils");
+// const { ApplicationError } = errors;
 
 const { v4: uuidv4 } = require("uuid");
 
@@ -58,18 +57,20 @@ module.exports = ({ strapi }) => ({
   },
   async queryEmbeddings(data) {
     const emptyQuery = data?.query ? false : true;
-    if (emptyQuery) return { error: "Please provide a query"}
+    if (emptyQuery) return { error: "Please provide a query" };
     const settings = await getSettings();
     const plugin = await pluginManager.initialize(settings);
-    
-    const chain = VectorDBQAChain.fromLLM(plugin.model, pluginManager.pineconeStore, {
-      k: 1,
-      returnSourceDocuments: true,
-    });
+
+    const chain = VectorDBQAChain.fromLLM(
+      plugin.model,
+      pluginManager.pineconeStore,
+      {
+        k: 1,
+        returnSourceDocuments: true,
+      }
+    );
 
     const response = await chain.call({ query: data.query });
     return response;
   },
-  async getEmbedding(ctx) {},
-  async getEmbeddings(ctx) {},
 });
