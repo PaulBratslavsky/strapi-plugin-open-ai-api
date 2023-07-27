@@ -8,10 +8,12 @@
 import React, { useEffect, useState } from "react";
 import PluginTable from "../../components/Table";
 import { useFetchClient } from "@strapi/helper-plugin";
+import { useHistory } from "react-router-dom";
 import { EmptyStateLayout, Box, Button } from "@strapi/design-system";
 import Plus from "@strapi/icons/Plus";
 import Illo from "../../components/Illo";
 function EmptyState() {
+  const history = useHistory();
   return (
     <div>
       <Box padding={8} background="neutral100">

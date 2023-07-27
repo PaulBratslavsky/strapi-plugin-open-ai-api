@@ -1,5 +1,6 @@
 // @ts-nocheck
 import React, { useEffect, useState } from "react";
+
 import {
   Box,
   Flex,
@@ -12,6 +13,7 @@ import {
 import { ExclamationMarkCircle, Trash } from "@strapi/icons";
 import { useFetchClient } from "@strapi/helper-plugin";
 import Header from "../../components/Header";
+import Markdown from '../../components/Markdown';
 import pluginId from "../../pluginId";
 import { useHistory, useParams } from "react-router-dom";
 import styled from "styled-components";
@@ -20,6 +22,7 @@ const StyledTypography = styled(Typography)`
   display: block;
   margin-bottom: 1rem;
 `;
+
 
 function ConfirmDeleteEmbedding({ callback, isLoading }) {
   const [isVisible, setIsVisible] = useState(false);
@@ -102,7 +105,7 @@ export default function EmbeddingDetails() {
       <Box padding={8}>
         <Box padding={4} background="neutral0">
           <StyledTypography variant="beta">Embeddings Content</StyledTypography>
-          <StyledTypography variant="omega">{data.content}</StyledTypography>
+          <Markdown>{data.content}</Markdown>
         </Box>
       </Box>
       <Box padding={8}>

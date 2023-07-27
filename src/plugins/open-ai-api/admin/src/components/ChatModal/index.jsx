@@ -4,14 +4,11 @@ import styled from "styled-components";
 import pluginId from "../../pluginId";
 import { useHistory } from "react-router-dom";
 import qs from "qs";
-
 import { useFetchClient } from "@strapi/helper-plugin";
-
 import {
   Link,
   Button,
   Typography,
-  IconButton,
   Box,
   TextInput,
   Accordion,
@@ -23,12 +20,21 @@ import {
   ModalFooter,
 } from "@strapi/design-system";
 
-import { Message } from "@strapi/icons";
+import RobotIcon from "../RobotIcon";
+import Markdown from "../Markdown";
 
-const StyledIconButton = styled(IconButton)`
+const StyledButton = styled(Button)`
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
+  height: 2.5rem;
+  width: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  svg {
+    height: 1.5rem;
+  }
 `;
 
 const StyledTypography = styled(Typography)`
@@ -112,27 +118,26 @@ export default function ChatModal() {
 
   function showResponse(data) {
     return data.map((item, index) => {
-      console.log(item.sourceDocuments[0].pageContent);
       return (
         <Box key={index}>
           <Box padding={1}>
             <StyledTypography>{item.text}</StyledTypography>
           </Box>
 
-          {item.sourceDocuments.map((doc, index) => {
-            console.log(doc);
-            return (
-              <AccordionDetails
-                key={index}
-                title="Original Source Document"
-                content={doc.pageContent}
-              >
-                <Link onClick={() => redirect(doc.metadata.id)}>
-                  View Source for {doc.metadata.title}
-                </Link>
-              </AccordionDetails>
-            );
-          })}
+          {item.sourceDocuments.length > 0 &&
+            item.sourceDocuments.map((doc, index) => {
+              return (
+                <AccordionDetails
+                  key={index}
+                  title="Original Source Document"
+                  content={<Markdown>{doc.pageContent}</Markdown>}
+                >
+                  <Link onClick={() => redirect(doc.metadata.id)}>
+                    View Source for {doc.metadata.title}
+                  </Link>
+                </AccordionDetails>
+              );
+            })}
         </Box>
       );
     });
@@ -140,7 +145,9 @@ export default function ChatModal() {
 
   return (
     <div>
-      <StyledIconButton onClick={() => setIsVisible(true)} icon={<Message />} />
+      <StyledButton onClick={() => setIsVisible(true)}>
+        <RobotIcon height="75" width="75" />
+      </StyledButton>
       {isVisible && (
         <ModalLayout
           onClose={() => setIsVisible((prev) => !prev)}
