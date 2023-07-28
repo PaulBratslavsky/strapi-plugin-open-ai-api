@@ -30,7 +30,7 @@ Select the plugin option.
 
 $ strapi generate
 ? Strapi Generators plugin - Generate a basic plugin
-? Plugin name open-ai-api
+? Plugin name open-ai-embeddings
 ? Choose your preferred language JavaScript
 ✔  +! 24 files added
 
@@ -40,9 +40,9 @@ Inside the root of your project in the `config` folder create a file called `plu
 
 ```bash
   module.exports = {
-    'open-ai-api': {
+    'open-ai-embeddings': {
       enabled: true,
-      resolve: './src/plugins/open-ai-api'
+      resolve: './src/plugins/open-ai-embeddings'
     },
   }
 ```
@@ -127,15 +127,15 @@ Let's test our route in Insomnia.
       [
         {
           intlLabel: {
-            id: getTrad('Settings.open-ai-api.plugin.title'),
+            id: getTrad('Settings.open-ai-embeddings.plugin.title'),
             defaultMessage: 'Settings',
           },
-          id: 'open-ai-api-settings',
+          id: 'open-ai-embeddings-settings',
           to: `/settings/${pluginId}`,
           permissions: pluginPermissions,
           Component: async () => {
             const component = await import(
-              /* webpackChunkName: "open-ai-api" */ './pages/Settings'
+              /* webpackChunkName: "open-ai-embeddings" */ './pages/Settings'
             );
 
             return component;
@@ -301,4 +301,4 @@ const SettingsPage = () => {
 
 export default ProtectedSettingsPage;
 ```
-# strapi-plugin-open-ai-api
+# strapi-plugin-open-ai-embeddings
