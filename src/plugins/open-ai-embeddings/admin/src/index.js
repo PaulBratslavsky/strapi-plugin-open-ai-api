@@ -1,21 +1,13 @@
 // @ts-nocheck
-import React from 'react';
-import { prefixPluginTranslations } from '@strapi/helper-plugin';
-import pluginPkg from '../../package.json';
-import pluginId from './pluginId';
-import Initializer from './components/Initializer';
-import PluginIcon from './components/PluginIcon';
-import pluginPermissions from './permissions';
-import getTrad from './utils/getTrad';
+import { prefixPluginTranslations } from "@strapi/helper-plugin";
+import pluginPkg from "../../package.json";
+import pluginId from "./pluginId";
+import Initializer from "./components/Initializer";
+import PluginIcon from "./components/PluginIcon";
+import pluginPermissions from "./permissions";
+import getTrad from "./utils/getTrad";
+import EmbeddingsWidget from './components/EmbeddingsWidget';
 
-
-const myComponent = async () => {
-  const component = await import(
-    /* webpackChunkName: "open-ai-embeddings" */ './pages/Settings'
-  );
-
-  return component;
-};
 
 const name = pluginPkg.strapi.name;
 
@@ -28,11 +20,8 @@ export default {
         id: `${pluginId}.plugin.name`,
         defaultMessage: "Open AI API",
       },
-      Component: async () => {
-        const component = await import(/* webpackChunkName: "[request]" */ './pages/App');
-
-        return component;
-      },
+      Component: async () =>
+        await import(/* webpackChunkName: "[request]" */ "./pages/App"),
       permissions: [],
     });
     app.registerPlugin({
@@ -57,30 +46,37 @@ export default {
     //   }
     // );
     app.createSettingSection(
-    {
-      id: pluginId,
-      intlLabel: { id: getTrad('Settings.open-ai-embeddings.link.title'), defaultMessage: 'Open AI API' },
-    },
-    [
       {
+        id: pluginId,
         intlLabel: {
-          id: getTrad('Settings.open-ai-embeddings.link.title'),
-          defaultMessage: 'Configurations',
+          id: getTrad("Settings.open-ai-embeddings.link.title"),
+          defaultMessage: "Open AI API",
         },
+      },
+      [
+        {
+          intlLabel: {
+            id: getTrad("Settings.open-ai-embeddings.link.title"),
+            defaultMessage: "Configurations",
+          },
 
-        id: getTrad('Settings.open-ai-embeddings.link.title'),
-        to: `/settings/${pluginId}`,
-        Component: myComponent,
-        permissions: pluginPermissions
-      }
-    ]
+          id: getTrad("Settings.open-ai-embeddings.link.title"),
+          to: `/settings/${pluginId}`,
+          Component: async () =>
+            await import(
+              /* webpackChunkName: "open-ai-embeddings" */ "./pages/Settings"
+            ),
+          permissions: pluginPermissions,
+        },
+      ]
     );
   },
 
   bootstrap(app) {
-    app.injectContentManagerComponent('editView', 'right-links', {
-      Component: () => <h1>From Plugin</h1>,
-    })
+    app.injectContentManagerComponent("editView", "right-links", {
+      name: "open-ai-embeddings",
+      Component: async () => <EmbeddingsWidget />,
+    });
   },
 
   async registerTrads({ locales }) {
