@@ -8,7 +8,10 @@ const { ApplicationError } = errors;
 const { v4: uuidv4 } = require("uuid");
 
 async function getSettings() {
-  return await strapi.plugin("open-ai-embeddings").service("openAiEmbeddings").getSettings();
+  return await strapi
+    .plugin("open-ai-embeddings")
+    .service("openAiEmbeddings")
+    .getSettings();
 }
 
 function checkSettings(settings) {
@@ -24,7 +27,6 @@ module.exports = ({ strapi }) => ({
     // TODO: IMPLEMENT ERROR
 
     const plugin = await pluginManager.initialize(settings);
-    const randomId = uuidv4();
 
     const entity = await strapi.entityService.create(
       "plugin::open-ai-embeddings.embedding",
@@ -33,14 +35,19 @@ module.exports = ({ strapi }) => ({
 
     const docs = [
       new Document({
-        metadata: { id: entity.id, title: entity.title },
+        metadata: {
+          id: entity.id,
+          title: entity.title,
+          collectionType: data.data.collectionType,
+          fieldName: data.data.fieldName,
+        },
         pageContent: data.data.content,
       }),
     ];
-  
+
     const toJason = JSON.stringify(docs);
     const ids = await plugin.pineconeStore.addDocuments(docs);
-    
+
     data.data.embeddingsId = ids[0];
     data.data.embeddings = toJason;
 
@@ -71,9 +78,9 @@ module.exports = ({ strapi }) => ({
   async queryEmbeddings(data) {
     const emptyQuery = data?.query ? false : true;
     if (emptyQuery) return { error: "Please provide a query" };
-    
+
     const settings = await getSettings();
-    
+
     const plugin = await pluginManager.initialize(settings);
 
     const chain = VectorDBQAChain.fromLLM(

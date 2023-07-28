@@ -1,7 +1,13 @@
-import React from 'react'
+// @ts-nocheck
+import React from "react";
+import ChatModal from "../ChatModal";
+import EmbeddingsModal from "../EmbeddingsModal";
 
 export default function EmbeddingsWidget() {
   return (
-    <div>EmbeddingsWidget</div>
-  )
+    <div>
+      <ChatModal />
+      <EmbeddingsModal />
+    </div>
+  );
 }

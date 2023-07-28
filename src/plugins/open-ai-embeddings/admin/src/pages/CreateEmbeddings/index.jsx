@@ -1,17 +1,11 @@
 // @ts-nocheck
 import React from "react";
-import styled from "styled-components";
-import MDEditor from "@uiw/react-md-editor";
-import { Box, TextInput, Button } from "@strapi/design-system";
+import { Box } from "@strapi/design-system";
 import { useFetchClient } from "@strapi/helper-plugin";
+import CreateEmbeddingsForm from "../../components/CreateEmbeddingsForm";
 import Header from "../../components/Header";
 import pluginId from "../../pluginId";
 import { useHistory } from "react-router-dom";
-
-const StyledMDEditor = styled(MDEditor)`
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-`;
 
 export default function CreateEmbeddings() {
   const { post } = useFetchClient();
@@ -23,8 +17,14 @@ export default function CreateEmbeddings() {
 
   const createEmbeddings = async () => {
     if (isLoading === false) setIsLoading(true);
+
     await post("/open-ai-embeddings/embeddings/create-embedding", {
-      data: { title: input, content: markdown },
+      data: {
+        title: input,
+        content: markdown,
+        collectionType: "embeddings",
+        fieldName: "embeddings",
+      },
     });
   };
 
@@ -49,29 +49,15 @@ export default function CreateEmbeddings() {
         subtitle={`Chunk Size: ${markdown.length}`}
       />
       <Box padding={8}>
-        <form onSubmit={handleSubmit}>
-          <fieldset disabled={isLoading}>
-            <TextInput
-              placeholder="Title"
-              label="Title"
-              name="input"
-              error={input.length > 55 ? "input is too long" : undefined}
-              onChange={(e) => setInput(e.target.value)}
-              value={input}
-            />
-            <div data-color-mode="light" >
-              <StyledMDEditor
-                value={markdown}
-                onChange={handleMarkdownChange}
-                height={400}
-              />
-              <div>{error && <p>{error}</p>}</div>
-            </div>
-            <Button type="submit" disabled={isLoading || error}>
-              {isLoading ? "Creating Embeddings" : "Create Embeddings"}
-            </Button>
-          </fieldset>
-        </form>
+        <CreateEmbeddingsForm
+          onSubmit={handleSubmit}
+          isLoading={isLoading}
+          input={input}
+          setInput={setInput}
+          markdown={markdown}
+          handleMarkdownChange={handleMarkdownChange}
+          error={error}
+        />
       </Box>
     </div>
   );

@@ -23,7 +23,6 @@ function EmptyState() {
           action={
             <Button
               onClick={() => history.push(`/plugins/${pluginId}/embeddings`)}
-              variant="secondary"
               startIcon={<Plus />}
             >
               Create new embedding
