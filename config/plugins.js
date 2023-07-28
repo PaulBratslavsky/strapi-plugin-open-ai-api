@@ -1,6 +1,6 @@
 module.exports = {
-  'open-ai-api': {
+  'open-ai-embeddings': {
     enabled: true,
-    resolve: './src/plugins/open-ai-api'
+    resolve: './src/plugins/open-ai-embeddings'
   },
 }
