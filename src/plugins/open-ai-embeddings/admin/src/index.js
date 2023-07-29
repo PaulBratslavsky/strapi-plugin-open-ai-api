@@ -20,7 +20,7 @@ export default {
       icon: PluginIcon,
       intlLabel: {
         id: `${pluginId}.plugin.name`,
-        defaultMessage: "Open AI API",
+        defaultMessage: "AI Embeddings",
       },
       Component: async () =>
         await import(/* webpackChunkName: "[request]" */ "./pages/App"),
@@ -32,27 +32,12 @@ export default {
       isReady: false,
       name,
     });
-    // Adding a single link
-    // app.addSettingsLink(
-    //   'global', // id of the section to add the link to
-    //   {
-    //     intlLabel: {
-    //       id: getTrad('Settings.open-ai-embeddings.link.title'),
-    //       defaultMessage: 'Open AI API',
-    //     },
-
-    //     id: getTrad('Settings.open-ai-embeddings.link.title'),
-    //     to: `/settings/${pluginId}`,
-    //     Component: myComponent,
-    //     permissions: pluginPermissions
-    //   }
-    // );
     app.createSettingSection(
       {
         id: pluginId,
         intlLabel: {
           id: getTrad("Settings.open-ai-embeddings.link.title"),
-          defaultMessage: "Open AI API",
+          defaultMessage: "AI Embeddings",
         },
       },
       [
