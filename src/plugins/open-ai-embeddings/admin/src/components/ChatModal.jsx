@@ -190,7 +190,7 @@ export default function ChatModal() {
               </Button>
             }
             endActions={
-              <Button onClick={handleQueryEmbeddings} disabled={isLoading}>
+              <Button onClick={handleQueryEmbeddings} disabled={inputValue === "" || isLoading}>
                 {isLoading ? "Sending..." : "Send"}
               </Button>
             }
