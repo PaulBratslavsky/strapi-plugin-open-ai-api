@@ -29,6 +29,11 @@
     },
     "content": {
       "type": "richtext"
+    },
+    "related": {
+      "type": "relation",
+      "relation": "morphToOne",
+      "configurable": false
     }
   }
 }

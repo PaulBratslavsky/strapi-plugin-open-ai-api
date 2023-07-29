@@ -1,9 +1,10 @@
 // @ts-nocheck
 import React from "react";
-import { Box } from "@strapi/design-system";
+import { Box, Button } from "@strapi/design-system";
 import { useFetchClient } from "@strapi/helper-plugin";
 import CreateEmbeddingsForm from "../../components/CreateEmbeddingsForm";
 import Header from "../../components/Header";
+import BackLink from "../../components/BackLink";
 import pluginId from "../../pluginId";
 import { useHistory } from "react-router-dom";
 
@@ -22,7 +23,7 @@ export default function CreateEmbeddings() {
       data: {
         title: input,
         content: markdown,
-        collectionType: "embeddings",
+        collectionType: "plugin::open-ai-embeddings.embedding",
         fieldName: "embeddings",
       },
     });
@@ -44,9 +45,14 @@ export default function CreateEmbeddings() {
   return (
     <div className="container">
       <Header
-        link={"/plugins/" + pluginId + "/"}
         title="Embeddings"
         subtitle={`Chunk Size: ${markdown.length}`}
+        primaryAction={
+          <Button onClick={handleSubmit} disabled={isLoading || error}>
+            {isLoading ? "Creating Embeddings" : "Create Embeddings"}
+          </Button>
+        }
+        navigationAction={<BackLink to={"/plugins/" + pluginId + "/"} />}
       />
       <Box padding={8}>
         <CreateEmbeddingsForm

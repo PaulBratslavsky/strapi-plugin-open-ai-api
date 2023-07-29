@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
-import pluginId from "../../pluginId";
+import pluginId from "../pluginId";
 import { useHistory } from "react-router-dom";
 import qs from "qs";
 import { useFetchClient } from "@strapi/helper-plugin";
@@ -20,8 +20,8 @@ import {
   ModalFooter,
 } from "@strapi/design-system";
 
-import RobotIcon from "../RobotIcon";
-import Markdown from "../Markdown";
+import RobotIcon from "./RobotIcon";
+import Markdown from "./Markdown";
 
 const StyledButton = styled(Button)`
   position: absolute;

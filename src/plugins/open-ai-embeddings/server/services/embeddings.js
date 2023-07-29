@@ -5,8 +5,6 @@ const { VectorDBQAChain } = require("langchain/chains");
 const { errors } = require("@strapi/utils");
 const { ApplicationError } = errors;
 
-const { v4: uuidv4 } = require("uuid");
-
 async function getSettings() {
   return await strapi
     .plugin("open-ai-embeddings")
@@ -51,11 +49,14 @@ module.exports = ({ strapi }) => ({
     data.data.embeddingsId = ids[0];
     data.data.embeddings = toJason;
 
-    return await strapi.entityService.update(
+    const response = await strapi.entityService.update(
       "plugin::open-ai-embeddings.embedding",
       entity.id,
       data
     );
+
+    console.log(response);
+    return response;
   },
   async deleteEmbedding(params) {
     const settings = await getSettings();

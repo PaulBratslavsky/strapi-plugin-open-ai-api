@@ -6,12 +6,16 @@
  */
 
 import React, { useEffect, useState } from "react";
-import PluginTable from "../../components/Table";
 import { useFetchClient } from "@strapi/helper-plugin";
 import { useHistory } from "react-router-dom";
-import { EmptyStateLayout, Box, Button } from "@strapi/design-system";
-import Plus from "@strapi/icons/Plus";
+import { EmptyStateLayout, Box, Button, Link } from "@strapi/design-system";
+import { ArrowLeft, Plus, Pencil } from "@strapi/icons";
+import pluginId from "../../pluginId";
 import Illo from "../../components/Illo";
+import ButtonLink from "../../components/ButtonLink";
+import Header from "../../components/Header";
+import PluginTable from "../../components/Table";
+
 function EmptyState() {
   const history = useHistory();
   return (
@@ -34,10 +38,7 @@ function EmptyState() {
   );
 }
 
-import pluginId from "../../pluginId";
-import Header from "../../components/Header";
-
-const HomePage = () => {
+export default function HomePage() {
   const { get } = useFetchClient();
   const [data, setData] = useState([]);
 
@@ -54,15 +55,17 @@ const HomePage = () => {
   return (
     <Box padding={8}>
       <Header
-        link="/"
-        buttonLink={"/plugins/" + pluginId + "/embeddings"}
-        buttonText="Create Embeddings"
         title="Embeddings"
         subtitle={`${data.length} results found`}
+        primaryAction={
+          <ButtonLink
+            to={`/plugins/${pluginId}/embeddings`}
+            icon={<Plus />}
+            text="Create new embedding"
+          />
+        }
       />
       <PluginTable data={data} />
     </Box>
   );
-};
-
-export default HomePage;
+}

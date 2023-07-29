@@ -2,7 +2,7 @@
 import React from "react";
 import styled from "styled-components";
 import MDEditor from "@uiw/react-md-editor";
-import { TextInput, Button } from "@strapi/design-system";
+import { TextInput } from "@strapi/design-system";
 
 const StyledMDEditor = styled(MDEditor)`
   margin-top: 1rem;
@@ -18,6 +18,7 @@ export default function CreateEmbeddingsForm({
   handleMarkdownChange,
   error,
   height,
+  children,
 }) {
   return (
     <form onSubmit={onSubmit}>
@@ -38,9 +39,7 @@ export default function CreateEmbeddingsForm({
           />
           <div>{error && <p>{error}</p>}</div>
         </div>
-        <Button type="submit" disabled={isLoading || error}>
-          {isLoading ? "Creating Embeddings" : "Create Embeddings"}
-        </Button>
+        {children && children}
       </fieldset>
     </form>
   );

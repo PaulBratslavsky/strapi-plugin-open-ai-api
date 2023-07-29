@@ -1,7 +1,9 @@
 // @ts-nocheck
 import React from "react";
 import { Link } from "react-router-dom";
-import pluginId from "../../pluginId";
+import { useHistory } from "react-router-dom";
+import styled from 'styled-components';
+import pluginId from "../pluginId";
 
 import {
   Box,
@@ -17,10 +19,14 @@ import {
 } from "@strapi/design-system";
 import { ArrowLeft } from "@strapi/icons";
 
+const StyledRow = styled(Tr)`
+  cursor: pointer;
+`;
+
 export default function PluginTable({ data }) {
+  const history = useHistory();
   const ROW_COUNT = 6;
   const COL_COUNT = 10;
-
   return (
     <Box padding={8} background="neutral100">
       <Table colCount={COL_COUNT} rowCount={ROW_COUNT}>
@@ -36,10 +42,10 @@ export default function PluginTable({ data }) {
               <Typography variant="sigma">Content</Typography>
             </Th>
             <Th>
-              <Typography variant="sigma">Embeddings ID</Typography>
+              <Typography variant="sigma">Pinecone ID</Typography>
             </Th>
             <Th>
-              <Typography variant="sigma">Embeddings</Typography>
+              <Typography variant="sigma">Data</Typography>
             </Th>
             <Th>
               <VisuallyHidden>Actions</VisuallyHidden>
@@ -50,7 +56,14 @@ export default function PluginTable({ data }) {
           {data &&
             data.map((entry) => {
               return (
-                <Tr key={entry.id}>
+                <StyledRow
+                  key={entry.id}
+                  onClick={() =>
+                    history.push(
+                      "/plugins/" + pluginId + "/embeddings/" + entry.id
+                    )
+                  }
+                >
                   <Td>
                     <Typography textColor="neutral800">{entry.id}</Typography>
                   </Td>
@@ -76,12 +89,14 @@ export default function PluginTable({ data }) {
                   </Td>
                   <Td>
                     <Flex>
-                      <Link to={"/plugins/" + pluginId + "/embeddings/" + entry.id} >
+                      <Link
+                        to={"/plugins/" + pluginId + "/embeddings/" + entry.id}
+                      >
                         <ArrowLeft />
                       </Link>
                     </Flex>
                   </Td>
-                </Tr>
+                </StyledRow>
               );
             })}
         </Tbody>

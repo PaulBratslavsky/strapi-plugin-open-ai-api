@@ -1,9 +1,9 @@
 // @ts-nocheck
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useHistory } from "react-router-dom";
-import { useCMEditViewDataManager } from "@strapi/helper-plugin";
 import { useFetchClient } from "@strapi/helper-plugin";
+import { useHistory } from 'react-router-dom';
+import pluginId from '../pluginId';
 import {
   Button,
   Typography,
@@ -11,9 +11,9 @@ import {
   ModalLayout,
   ModalBody,
 } from "@strapi/design-system";
-import { Plus } from "@strapi/icons";
-
-import CreateEmbeddingsForm from "../CreateEmbeddingsForm";
+import { Plus, Eye } from "@strapi/icons";
+import { useCMEditViewDataManager } from "@strapi/helper-plugin";
+import CreateEmbeddingsForm from "./CreateEmbeddingsForm";
 
 const StyledTypography = styled(Typography)`
   display: block;
@@ -22,15 +22,18 @@ const StyledTypography = styled(Typography)`
 `;
 
 export default function EmbeddingsModal() {
+  const { post } = useFetchClient();
+  const history = useHistory();
   const dataManager = useCMEditViewDataManager();
   const initialData = dataManager.initialData;
+
   const [isVisible, setIsVisible] = useState(false);
-  const { post } = useFetchClient();
   const [input, setInput] = React.useState("");
   const [fieldname, setFieldname] = React.useState("");
   const [markdown, setMarkdown] = React.useState("Enter text here");
   const [error, setError] = React.useState();
   const [isLoading, setIsLoading] = React.useState(false);
+  const [response, setResponse] = React.useState(null);
 
   useEffect(() => {
     for (const [key, value] of Object.entries(dataManager.layout.attributes)) {
@@ -41,49 +44,64 @@ export default function EmbeddingsModal() {
     }
   }, [dataManager.modifiedData]);
 
-  useEffect(() => {
-    function checkIfEmbeddingExists(id) {
-      console.log("checkIfEmbeddingExists", id);
-    }
-
-    checkIfEmbeddingExists(initialData.id);
-  }, []);
-
   const createEmbeddings = async () => {
     if (isLoading === false) setIsLoading(true);
-    await post("/open-ai-embeddings/embeddings/create-embedding", {
+    return await post("/open-ai-embeddings/embeddings/create-embedding", {
       data: {
         title: input,
         content: markdown,
-        collectionType: dataManager.layout.apiID,
+        collectionType: dataManager.slug,
         fieldName: fieldname,
+        related: {
+          __type: dataManager.slug,
+          id: initialData.id,
+        },
       },
     });
   };
 
+
   function handleMarkdownChange(value) {
-    if (value.length > 4000) setError("Chunk size limit reached");
+    if (value.length > 4000) { setError("Chunk size limit reached"); }
     setMarkdown(value);
   }
 
   async function handleSubmit(e) {
     e.preventDefault();
-    e.stopPropagation();
     setIsLoading(true);
-    await createEmbeddings();
+    const response = await createEmbeddings();
     setIsVisible(false);
+    setResponse(response);
   }
 
   return (
     <div>
-      <Button
-        onClick={() => setIsVisible(true)}
-        startIcon={<Plus />}
-        disabled={!initialData.publishedAt}
-        fullWidth
-      >
-        Create new embedding
-      </Button>
+      {initialData?.embedding || response ? (
+        <Button
+          onClick={() =>
+            history.push(
+              "/plugins/" +
+                pluginId +
+                "/embeddings/" +
+                initialData?.embedding.id
+            )
+          }
+          startIcon={<Eye />}
+          fullWidth
+        >
+          View Embedding
+        </Button>
+      ) : (
+        <Button
+          onClick={() => setIsVisible(true)}
+          startIcon={<Plus />}
+          disabled={!initialData.publishedAt}
+          fullWidth
+        >
+          Create new embedding
+        </Button>
+      )}
+
       {isVisible && (
         <ModalLayout
           onClose={() => setIsVisible((prev) => !prev)}
@@ -100,7 +118,11 @@ export default function EmbeddingsModal() {
                 markdown={markdown}
                 handleMarkdownChange={handleMarkdownChange}
                 error={error}
-              />
+              >
+                <Button type="submit" disabled={isLoading || error}>
+                  {isLoading ? "Creating Embeddings" : "Create Embeddings"}
+                </Button>
+              </CreateEmbeddingsForm>
             </Box>
           </ModalBody>
         </ModalLayout>
