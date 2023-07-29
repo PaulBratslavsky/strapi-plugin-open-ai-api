@@ -6,17 +6,16 @@ import { HeaderLayout } from "@strapi/design-system/Layout";
 import getTrad from "../utils/getTrad";
 
 const OpenAiHeader = () => {
-  const { formatMessage } = useIntl();
 
   return (
     <>
       <SettingsPageTitle
-        name={"Open AI API"}
+        name={"AI Embeddings"}
       />
       <HeaderLayout
         id="title"
-        title={"Open AI API"}
-        subtitle={"Settings for the Open AI API plugin"}
+        title={"AI Embeddings"}
+        subtitle={"Settings for the AI Embeddings plugin"}
       />
     </>
   );
