@@ -9,7 +9,7 @@ import React, { useEffect, useState } from "react";
 import { useFetchClient } from "@strapi/helper-plugin";
 import { useHistory } from "react-router-dom";
 import { EmptyStateLayout, Box, Button, Link } from "@strapi/design-system";
-import { ArrowLeft, Plus, Pencil } from "@strapi/icons";
+import { Plus } from "@strapi/icons";
 import pluginId from "../../pluginId";
 import Illo from "../../components/Illo";
 import ButtonLink from "../../components/ButtonLink";
