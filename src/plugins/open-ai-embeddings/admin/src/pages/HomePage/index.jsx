@@ -8,13 +8,14 @@
 import React, { useEffect, useState } from "react";
 import { useFetchClient } from "@strapi/helper-plugin";
 import { useHistory } from "react-router-dom";
-import { EmptyStateLayout, Box, Button, Link } from "@strapi/design-system";
+import { EmptyStateLayout, Box, Button } from "@strapi/design-system";
 import { Plus } from "@strapi/icons";
 import pluginId from "../../pluginId";
 import Illo from "../../components/Illo";
 import ButtonLink from "../../components/ButtonLink";
 import Header from "../../components/Header";
 import PluginTable from "../../components/Table";
+import Pagination  from "../../components/Pagination";
 
 function EmptyState() {
   const history = useHistory();
@@ -66,6 +67,7 @@ export default function HomePage() {
         }
       />
       <PluginTable data={data} />
+      <Pagination page={1} totalPages={26} basePath="/plugins/open-ai-embeddings/embeddings" />
     </Box>
   );
 }
