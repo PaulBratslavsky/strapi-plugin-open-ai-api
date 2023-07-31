@@ -2,8 +2,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useFetchClient } from "@strapi/helper-plugin";
-import { useHistory } from 'react-router-dom';
-import pluginId from '../pluginId';
+import { useHistory } from "react-router-dom";
+import pluginId from "../pluginId";
 import {
   Button,
   Typography,
@@ -60,9 +60,10 @@ export default function EmbeddingsModal() {
     });
   };
 
-
   function handleMarkdownChange(value) {
-    if (value.length > 4000) { setError("Chunk size limit reached"); }
+    if (value.length > 4000) {
+      setError("Chunk size limit reached");
+    }
     setMarkdown(value);
   }
 
@@ -74,16 +75,19 @@ export default function EmbeddingsModal() {
     setResponse(response);
   }
 
+  function hasEmbedding() {
+    if (response) return response.data.id;
+    if (initialData?.embedding) return initialData?.embedding.id;  
+    return null;
+  }
+  
   return (
     <div>
-      {initialData?.embedding || response ? (
+      {hasEmbedding() ? (
         <Button
           onClick={() =>
             history.push(
-              "/plugins/" +
-                pluginId +
-                "/embeddings/" +
-                initialData?.embedding.id
+              "/plugins/" + pluginId + "/embeddings/" + hasEmbedding()
             )
           }
           startIcon={<Eye />}
