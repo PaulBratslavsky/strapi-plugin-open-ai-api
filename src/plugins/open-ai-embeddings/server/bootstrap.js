@@ -1,4 +1,5 @@
 'use strict';
+const pluginManager = require("./initialize");
 
 
 module.exports = async ({ strapi }) => {
@@ -36,4 +37,7 @@ module.exports = async ({ strapi }) => {
   ];
 
   await strapi.admin.services.permission.actionProvider.registerMany(actions);
+
+  const pluginSettings = await strapi.config.get("plugin.open-ai-embeddings");
+  pluginManager.initialize(pluginSettings);
 };

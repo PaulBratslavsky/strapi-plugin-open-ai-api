@@ -1,30 +1,14 @@
 // @ts-nocheck
-const pluginManager = require("./initialize");
+const pluginManager = require("../initialize");
 const { Document } = require("langchain/document");
 const { VectorDBQAChain } = require("langchain/chains");
 const { errors } = require("@strapi/utils");
 const { ApplicationError } = errors;
 
-async function getSettings() {
-  return await strapi
-    .plugin("open-ai-embeddings")
-    .service("openAiEmbeddings")
-    .getSettings();
-}
-
-function checkSettings(settings) {
-  throw new ApplicationError(
-    "Please provide a valid Open AI Embeddings settings"
-  );
-}
 
 module.exports = ({ strapi }) => ({
   async createEmbedding(data) {
-    const settings = await getSettings();
-
-    // TODO: IMPLEMENT ERROR
-
-    const plugin = await pluginManager.initialize(settings);
+    const plugin = await pluginManager.getSettings();
 
     const entity = await strapi.entityService.create(
       "plugin::open-ai-embeddings.embedding",
@@ -55,12 +39,10 @@ module.exports = ({ strapi }) => ({
       data
     );
 
-    console.log(response);
     return response;
   },
   async deleteEmbedding(params) {
-    const settings = await getSettings();
-    const plugin = await pluginManager.initialize(settings);
+    const plugin = await pluginManager.getSettings();
 
     const currentEntry = await strapi.entityService.findOne(
       "plugin::open-ai-embeddings.embedding",
@@ -80,9 +62,7 @@ module.exports = ({ strapi }) => ({
     const emptyQuery = data?.query ? false : true;
     if (emptyQuery) return { error: "Please provide a query" };
 
-    const settings = await getSettings();
-
-    const plugin = await pluginManager.initialize(settings);
+    const plugin = await pluginManager.getSettings();
 
     const chain = VectorDBQAChain.fromLLM(
       plugin.model,

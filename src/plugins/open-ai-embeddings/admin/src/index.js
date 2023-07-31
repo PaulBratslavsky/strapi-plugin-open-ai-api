@@ -32,31 +32,6 @@ export default {
       isReady: false,
       name,
     });
-    app.createSettingSection(
-      {
-        id: pluginId,
-        intlLabel: {
-          id: getTrad("Settings.open-ai-embeddings.link.title"),
-          defaultMessage: "AI Embeddings",
-        },
-      },
-      [
-        {
-          intlLabel: {
-            id: getTrad("Settings.open-ai-embeddings.link.title"),
-            defaultMessage: "Configurations",
-          },
-
-          id: getTrad("Settings.open-ai-embeddings.link.title"),
-          to: `/settings/${pluginId}`,
-          Component: async () =>
-            await import(
-              /* webpackChunkName: "open-ai-embeddings" */ "./pages/Settings"
-            ),
-          permissions: pluginPermissions,
-        },
-      ]
-    );
   },
 
   bootstrap(app) {
