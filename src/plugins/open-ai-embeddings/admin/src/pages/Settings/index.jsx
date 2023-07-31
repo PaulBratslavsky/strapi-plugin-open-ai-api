@@ -1,5 +1,6 @@
 // @ts-nocheck
 import React, { useState, useEffect } from "react";
+import { useNotification } from "@strapi/helper-plugin";
 import { useFetchClient, CheckPagePermissions } from "@strapi/helper-plugin";
 import styled from "styled-components";
 import {
@@ -30,6 +31,7 @@ const ProtectedSettingsPage = () => {
 
 const SettingsForm = () => {
   const { get, put } = useFetchClient();
+  const toggleNotification  = useNotification();
   const [apiKey, setApiKey] = useState("");
   const [pineConeApiKey, setPineConeApiKey] = useState("");
   const [pineConeApiEnv, setPineConeApiEnv] = useState("");
@@ -43,9 +45,27 @@ const SettingsForm = () => {
       setPineConeApiEnv(data ? data.data.pineConeApiEnv : "");
     }
     fetchData();
+    toggleNotification({
+      type: "warning",
+      message: "hello world",
+    });
   }, []);
 
+  function checkIfFieldIsBlank() {
+    if (apiKey === "") return { error: true, type: "warning", message: "Open AI API Key is required" };
+    if (pineConeApiKey === "") return { error: true, type: "warning", message: "Pinecone API Key is required" };
+    if (pineConeApiEnv === "") return { error: true, type: "warning", message: "Pinecone Environment is required" };
+  }
+
   const updateData = async () => {
+    const fieldIsBlank = checkIfFieldIsBlank();
+    
+    if (fieldIsBlank) {
+      toggleNotification(fieldIsBlank);
+      setIsLoading(false);
+      return;
+    }
+    
     if (isLoading === false) setIsLoading(true);
     await put("/open-ai-embeddings/update-settings", {
       data: {

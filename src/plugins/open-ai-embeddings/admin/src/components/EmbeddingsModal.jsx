@@ -9,10 +9,13 @@ import {
   Typography,
   Box,
   ModalLayout,
+  ModalHeader,
   ModalBody,
+  ModalFooter,
 } from "@strapi/design-system";
 import { Plus, Eye } from "@strapi/icons";
 import { useCMEditViewDataManager } from "@strapi/helper-plugin";
+import { useNotification } from "@strapi/helper-plugin";
 import CreateEmbeddingsForm from "./CreateEmbeddingsForm";
 
 const StyledTypography = styled(Typography)`
@@ -23,6 +26,7 @@ const StyledTypography = styled(Typography)`
 
 export default function EmbeddingsModal() {
   const { post } = useFetchClient();
+  const toggleNotification = useNotification();
   const history = useHistory();
   const dataManager = useCMEditViewDataManager();
   const initialData = dataManager.initialData;
@@ -67,8 +71,19 @@ export default function EmbeddingsModal() {
     setMarkdown(value);
   }
 
+  function checkIfFieldIsBlank() {
+    if (markdown === "") return { error: true, type: "warning", message: "Embeddings text is required" };
+    if (input === "") return { error: true, type: "warning", message: "Embeddings title is required" };
+  };
+
   async function handleSubmit(e) {
     e.preventDefault();
+
+    if (checkIfFieldIsBlank()) {
+      toggleNotification(checkIfFieldIsBlank());
+      return;
+    };
+
     setIsLoading(true);
     const response = await createEmbeddings();
     setIsVisible(false);
@@ -77,10 +92,10 @@ export default function EmbeddingsModal() {
 
   function hasEmbedding() {
     if (response) return response.data.id;
-    if (initialData?.embedding) return initialData?.embedding.id;  
+    if (initialData?.embedding) return initialData?.embedding.id;
     return null;
   }
-  
+
   return (
     <div>
       {hasEmbedding() ? (
@@ -111,8 +126,18 @@ export default function EmbeddingsModal() {
           onClose={() => setIsVisible((prev) => !prev)}
           labelledBy="title"
         >
+          <ModalHeader>
+            <Typography
+              fontWeight="bold"
+              textColor="neutral800"
+              as="h2"
+              id="title"
+            >
+              Create A New Embedding
+            </Typography>
+          </ModalHeader>
           <ModalBody>
-            <Box padding={4}>
+            <Box padding={2}>
               <StyledTypography>{`Chunk Size: ${markdown.length}`}</StyledTypography>
               <CreateEmbeddingsForm
                 onSubmit={handleSubmit}
@@ -122,13 +147,17 @@ export default function EmbeddingsModal() {
                 markdown={markdown}
                 handleMarkdownChange={handleMarkdownChange}
                 error={error}
-              >
-                <Button type="submit" disabled={isLoading || error}>
-                  {isLoading ? "Creating Embeddings" : "Create Embeddings"}
-                </Button>
-              </CreateEmbeddingsForm>
+                height={300}
+              />
             </Box>
           </ModalBody>
+          <ModalFooter
+            endActions={
+              <Button onClick={handleSubmit} disabled={isLoading || error}>
+                {isLoading ? "Creating Embeddings" : "Create Embeddings"}
+              </Button>
+            }
+          />
         </ModalLayout>
       )}
     </div>

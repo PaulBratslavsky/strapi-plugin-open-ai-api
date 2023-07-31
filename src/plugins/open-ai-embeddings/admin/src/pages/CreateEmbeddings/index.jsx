@@ -2,6 +2,7 @@
 import React from "react";
 import { Box, Button } from "@strapi/design-system";
 import { useFetchClient } from "@strapi/helper-plugin";
+import { useNotification } from "@strapi/helper-plugin";
 import CreateEmbeddingsForm from "../../components/CreateEmbeddingsForm";
 import Header from "../../components/Header";
 import BackLink from "../../components/BackLink";
@@ -10,11 +11,28 @@ import { useHistory } from "react-router-dom";
 
 export default function CreateEmbeddings() {
   const { post } = useFetchClient();
+  const history = useHistory();
+  const toggleNotification = useNotification();
+
   const [input, setInput] = React.useState("");
   const [markdown, setMarkdown] = React.useState("Enter text here");
   const [error, setError] = React.useState();
   const [isLoading, setIsLoading] = React.useState(false);
-  const history = useHistory();
+
+  function checkIfFieldIsBlank() {
+    if (markdown === "")
+      return {
+        error: true,
+        type: "warning",
+        message: "Embeddings text is required",
+      };
+    if (input === "")
+      return {
+        error: true,
+        type: "warning",
+        message: "Embeddings title is required",
+      };
+  }
 
   const createEmbeddings = async () => {
     if (isLoading === false) setIsLoading(true);
@@ -37,6 +55,12 @@ export default function CreateEmbeddings() {
   async function handleSubmit(e) {
     e.preventDefault();
     e.stopPropagation();
+
+    if (checkIfFieldIsBlank()) {
+      toggleNotification(checkIfFieldIsBlank());
+      return;
+    }
+
     setIsLoading(true);
     await createEmbeddings();
     history.push("/plugins/" + pluginId + "/");
