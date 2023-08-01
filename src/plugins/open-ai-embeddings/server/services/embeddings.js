@@ -36,13 +36,11 @@ module.exports = ({ strapi }) => ({
     data.data.embeddingsId = ids[0];
     data.data.embeddings = toJason;
 
-    const response = await strapi.entityService.update(
+    return await strapi.entityService.update(
       "plugin::open-ai-embeddings.embedding",
       entity.id,
       data
     );
-
-    return response;
   },
   async deleteEmbedding(params) {
     const plugin = await pluginManager.getSettings();
@@ -76,8 +74,7 @@ module.exports = ({ strapi }) => ({
       }
     );
 
-    const response = await chain.call({ query: data.query });
-    return response;
+    return await chain.call({ query: data.query });
   },
   async getEmbedding(ctx) {
     const contentType = strapi.contentType(
@@ -89,15 +86,11 @@ module.exports = ({ strapi }) => ({
       ctx.state.auth
     );
 
-    const response = await strapi.entityService.findOne(
+    return await strapi.entityService.findOne(
       contentType.uid,
       ctx.params.id,
       sanitizedQueryParams
     );
-
-    console.log(response);
-
-    return response;
   },
 
   async getEmbeddings(ctx) {
@@ -114,8 +107,6 @@ module.exports = ({ strapi }) => ({
       contentType.uid,
       sanitizedQueryParams
     );
-
-    console.log(count, "############### COUNT ##################");
 
     const data = await strapi.entityService.findMany(
       contentType.uid,

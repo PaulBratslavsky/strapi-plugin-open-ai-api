@@ -4,8 +4,9 @@
  * HomePage
  *
  */
-
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
+import _ from "lodash";
+import qs from "qs";
 import { useFetchClient } from "@strapi/helper-plugin";
 import { useHistory } from "react-router-dom";
 import { EmptyStateLayout, Box, Button } from "@strapi/design-system";
@@ -15,6 +16,7 @@ import Illo from "../../components/Illo";
 import ButtonLink from "../../components/ButtonLink";
 import Header from "../../components/Header";
 import PluginTable from "../../components/Table";
+import Search from "../../components/Search";
 
 function EmptyState() {
   const history = useHistory();
@@ -38,20 +40,48 @@ function EmptyState() {
   );
 }
 
+const query = (searchTerm) =>
+  qs.stringify({
+    filters: {
+      $or: [
+        {
+          title: {
+            $contains: searchTerm,
+          },
+        },
+        {
+          content: {
+            $contains: searchTerm,
+          },
+        },
+      ],
+    },
+  });
+
 export default function HomePage() {
   const { get } = useFetchClient();
   const [embeddings, setEmbeddings] = useState([]);
+  const [search, setSearch] = useState("");
 
+  //TODO: LEARN MORE ABOUT DEBOUNCE
+  const fetchData = useCallback(
+    _.debounce(async (searchTerm) => {
+      const response = await get(
+        `/open-ai-embeddings/embeddings/find?${query(searchTerm)}`
+      );
+      setEmbeddings(response.data);
+    }, 500),
+    [get]
+  );
 
   useEffect(() => {
-    async function fetchData() {
-      const response = await get("/open-ai-embeddings/embeddings/find?pagination[page]=1&pagination[pageSize]=2");
-      console.log(response.data, "response");
-      setEmbeddings(response.data);
-    }
-    fetchData();
-  }, []);
+    fetchData(search);
+  }, [search, fetchData]);
 
+  function handleSearchChange(event) {
+    event.preventDefault();
+    setSearch(event.target.value);
+  }
   const { data, count } = embeddings;
   if (count === 0) return <EmptyState />;
 
@@ -67,6 +97,11 @@ export default function HomePage() {
             text="Create new embedding"
           />
         }
+      />
+      <Search
+        search={search}
+        setSearch={setSearch}
+        onChange={handleSearchChange}
       />
       <PluginTable data={data} />
     </Box>
