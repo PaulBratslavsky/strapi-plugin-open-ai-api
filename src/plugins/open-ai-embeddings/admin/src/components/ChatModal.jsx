@@ -116,12 +116,12 @@ export default function ChatModal() {
     setIsLoading(false);
   }
 
-  function showResponse(data) {
+  function ShowResponse({ data }) {
     return data.map((item, index) => {
       return (
         <Box key={index}>
           <Box padding={1}>
-            <StyledTypography>{item.text}</StyledTypography>
+            <Markdown>{item.text}</Markdown>
           </Box>
 
           {item.sourceDocuments.length > 0 &&
@@ -166,7 +166,9 @@ export default function ChatModal() {
           <ModalBody>
             {data.length > 0 && (
               <Box padding={1}>
-                <ResponseText ref={ref}>{showResponse(data)}</ResponseText>
+                <ResponseText ref={ref}>
+                  <ShowResponse data={data} />
+                </ResponseText>
               </Box>
             )}
             <Box padding={1}>
@@ -190,7 +192,10 @@ export default function ChatModal() {
               </Button>
             }
             endActions={
-              <Button onClick={handleQueryEmbeddings} disabled={inputValue === "" || isLoading}>
+              <Button
+                onClick={handleQueryEmbeddings}
+                disabled={inputValue === "" || isLoading}
+              >
                 {isLoading ? "Sending..." : "Send"}
               </Button>
             }

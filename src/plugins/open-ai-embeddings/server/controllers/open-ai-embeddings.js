@@ -2,6 +2,13 @@
 const { sanitize } = require("@strapi/utils");
 const { contentAPI } = sanitize;
 
+const {
+  getPaginationInfo,
+  convertPagedToStartLimit,
+  shouldCount,
+  transformPaginationResponse,
+} = require("../pagination");
+
 module.exports = ({ strapi }) => ({
   async createEmbedding(ctx) {
     try {
