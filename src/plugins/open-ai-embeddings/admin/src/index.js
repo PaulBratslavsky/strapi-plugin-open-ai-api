@@ -5,12 +5,8 @@ import pluginPkg from "../../package.json";
 import pluginId from "./pluginId";
 import Initializer from "./components/Initializer";
 import PluginIcon from "./components/PluginIcon";
-import pluginPermissions from "./permissions";
-import getTrad from "./utils/getTrad";
 
 import EmbeddingsWidget from './components/EmbeddingsWidget';
-
-
 const name = pluginPkg.strapi.name;
 
 export default {

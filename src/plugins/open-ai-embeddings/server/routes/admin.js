@@ -9,32 +9,7 @@ module.exports = {
         policies: [],
       },
     },
-    {
-      method: 'PUT',
-      path: '/update-settings',
-      handler: 'openAiEmbeddings.updateSettings',
-      config: {
-        policies: [
-          {
-            name: 'admin::hasPermissions',
-            config: { actions: ['plugin::open-ai-embeddings.update'] }
-          },
-        ],
-      },
-    },
-    {
-      method: 'GET',
-      path: '/get-settings',
-      handler: 'openAiEmbeddings.getSettings',
-      config: {
-        policies: [
-          {
-            name: 'admin::hasPermissions',
-            config: { actions: ['plugin::open-ai-embeddings.read'] }
-          },
-        ]
-      },
-    },
+    
     {
       method: 'POST',
       path: '/embeddings/create-embedding',
