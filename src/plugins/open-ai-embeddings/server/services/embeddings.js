@@ -108,11 +108,13 @@ module.exports = ({ strapi }) => ({
       sanitizedQueryParams
     );
 
+    const totalCount = await strapi.entityService.count(contentType.uid);
+
     const data = await strapi.entityService.findMany(
       contentType.uid,
       sanitizedQueryParams
     );
 
-    return { data, count };
+    return { data, count, totalCount };
   },
 });

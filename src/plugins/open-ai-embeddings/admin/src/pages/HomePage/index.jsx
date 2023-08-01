@@ -82,8 +82,8 @@ export default function HomePage() {
     event.preventDefault();
     setSearch(event.target.value);
   }
-  const { data, count } = embeddings;
-  if (count === 0) return <EmptyState />;
+  const { data, count, totalCount } = embeddings;
+  if (totalCount === 0) return <EmptyState />;
 
   return (
     <Box padding={8}>
