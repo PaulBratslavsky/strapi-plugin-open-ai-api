@@ -1,6 +1,5 @@
 import React from "react";
-import { Box, BaseHeaderLayout, Link } from "@strapi/design-system";
-import { ArrowLeft } from "@strapi/icons";
+import { Box, BaseHeaderLayout } from "@strapi/design-system";
 
 export default function Header({
   navigationAction,

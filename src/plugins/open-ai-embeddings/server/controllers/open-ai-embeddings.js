@@ -1,13 +1,4 @@
 "use strict";
-const { sanitize } = require("@strapi/utils");
-const { contentAPI } = sanitize;
-
-const {
-  getPaginationInfo,
-  convertPagedToStartLimit,
-  shouldCount,
-  transformPaginationResponse,
-} = require("../pagination");
 
 module.exports = ({ strapi }) => ({
   async createEmbedding(ctx) {
@@ -33,41 +24,22 @@ module.exports = ({ strapi }) => ({
   },
 
   async getEmbeddings(ctx) {
-    const contentType = strapi.contentType(
-      "plugin::open-ai-embeddings.embedding"
-    );
-    const sanitizedQueryParams = await contentAPI.query(
-      ctx.query,
-      contentType,
-      ctx.state.auth
-    );
-
     try {
-      return await strapi.entityService.findMany(
-        contentType.uid,
-        sanitizedQueryParams
-      );
+      return await strapi
+        .plugin("open-ai-embeddings")
+        .service("embeddings")
+        .getEmbeddings(ctx);
     } catch (error) {
       ctx.throw(500, error);
     }
   },
 
   async getEmbedding(ctx) {
-    const contentType = strapi.contentType(
-      "plugin::open-ai-embeddings.embedding"
-    );
-    const sanitizedQueryParams = await contentAPI.query(
-      ctx.query,
-      contentType,
-      ctx.state.auth
-    );
-
     try {
-      return await strapi.entityService.findOne(
-        contentType.uid,
-        ctx.params.id,
-        sanitizedQueryParams
-      );
+      return await strapi
+        .plugin("open-ai-embeddings")
+        .service("embeddings")
+        .getEmbedding(ctx);
     } catch (error) {
       ctx.throw(500, error);
     }

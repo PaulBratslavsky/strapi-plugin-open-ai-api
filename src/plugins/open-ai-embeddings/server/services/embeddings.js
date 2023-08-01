@@ -2,9 +2,12 @@
 const pluginManager = require("../initialize");
 const { Document } = require("langchain/document");
 const { VectorDBQAChain } = require("langchain/chains");
-const { errors } = require("@strapi/utils");
-const { ApplicationError } = errors;
 
+const { sanitize } = require("@strapi/utils");
+const { contentAPI } = sanitize;
+
+// const { errors } = require("@strapi/utils");
+// const { ApplicationError } = errors;
 
 module.exports = ({ strapi }) => ({
   async createEmbedding(data) {
@@ -75,5 +78,50 @@ module.exports = ({ strapi }) => ({
 
     const response = await chain.call({ query: data.query });
     return response;
+  },
+  async getEmbedding(ctx) {
+    const contentType = strapi.contentType(
+      "plugin::open-ai-embeddings.embedding"
+    );
+    const sanitizedQueryParams = await contentAPI.query(
+      ctx.query,
+      contentType,
+      ctx.state.auth
+    );
+
+    const response = await strapi.entityService.findOne(
+      contentType.uid,
+      ctx.params.id,
+      sanitizedQueryParams
+    );
+
+    console.log(response);
+
+    return response;
+  },
+
+  async getEmbeddings(ctx) {
+    const contentType = strapi.contentType(
+      "plugin::open-ai-embeddings.embedding"
+    );
+    const sanitizedQueryParams = await contentAPI.query(
+      ctx.query,
+      contentType,
+      ctx.state.auth
+    );
+
+    const count = await strapi.entityService.count(
+      contentType.uid,
+      sanitizedQueryParams
+    );
+
+    console.log(count, "############### COUNT ##################");
+
+    const data = await strapi.entityService.findMany(
+      contentType.uid,
+      sanitizedQueryParams
+    );
+
+    return { data, count };
   },
 });

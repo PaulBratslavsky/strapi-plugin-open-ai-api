@@ -15,7 +15,6 @@ import Illo from "../../components/Illo";
 import ButtonLink from "../../components/ButtonLink";
 import Header from "../../components/Header";
 import PluginTable from "../../components/Table";
-import Pagination  from "../../components/Pagination";
 
 function EmptyState() {
   const history = useHistory();
@@ -41,23 +40,26 @@ function EmptyState() {
 
 export default function HomePage() {
   const { get } = useFetchClient();
-  const [data, setData] = useState([]);
+  const [embeddings, setEmbeddings] = useState([]);
+
 
   useEffect(() => {
     async function fetchData() {
-      const data = await get("/open-ai-embeddings/embeddings/find");
-      setData(data.data);
+      const response = await get("/open-ai-embeddings/embeddings/find?pagination[page]=1&pagination[pageSize]=2");
+      console.log(response.data, "response");
+      setEmbeddings(response.data);
     }
     fetchData();
   }, []);
 
-  if (data.length === 0) return <EmptyState />;
+  const { data, count } = embeddings;
+  if (count === 0) return <EmptyState />;
 
   return (
     <Box padding={8}>
       <Header
         title="Embeddings"
-        subtitle={`${data.length} results found`}
+        subtitle={`${count} results found`}
         primaryAction={
           <ButtonLink
             to={`/plugins/${pluginId}/embeddings`}
@@ -67,7 +69,6 @@ export default function HomePage() {
         }
       />
       <PluginTable data={data} />
-      <Pagination page={1} totalPages={26} basePath="/plugins/open-ai-embeddings/embeddings" />
     </Box>
   );
 }
