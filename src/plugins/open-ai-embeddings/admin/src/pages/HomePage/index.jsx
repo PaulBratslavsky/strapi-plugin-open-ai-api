@@ -21,8 +21,7 @@ import Search from "../../components/Search";
 function EmptyState() {
   const history = useHistory();
   return (
-    <div>
-      <Box padding={8} background="neutral100">
+    <Box padding={8}>
         <EmptyStateLayout
           icon={<Illo />}
           content="Let's create our first embedding..."
@@ -36,7 +35,6 @@ function EmptyState() {
           }
         />
       </Box>
-    </div>
   );
 }
 
@@ -83,10 +81,12 @@ export default function HomePage() {
     setSearch(event.target.value);
   }
   const { data, count, totalCount } = embeddings;
+
+  if (!data) return null;
   if (totalCount === 0) return <EmptyState />;
 
   return (
-    <ContentLayout padding={8}>
+    <ContentLayout>
       <Header
         title="Embeddings"
         subtitle={`${count} results found`}

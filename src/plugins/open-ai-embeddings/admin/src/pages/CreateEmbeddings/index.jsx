@@ -1,6 +1,6 @@
 // @ts-nocheck
 import React from "react";
-import { Box, Button } from "@strapi/design-system";
+import { Button, ContentLayout } from "@strapi/design-system";
 import { useFetchClient } from "@strapi/helper-plugin";
 import { useNotification } from "@strapi/helper-plugin";
 import CreateEmbeddingsForm from "../../components/CreateEmbeddingsForm";
@@ -16,7 +16,6 @@ export default function CreateEmbeddings() {
 
   const [input, setInput] = React.useState("");
   const [markdown, setMarkdown] = React.useState("Enter text here");
-  const [error, setError] = React.useState();
   const [isLoading, setIsLoading] = React.useState(false);
 
   function checkIfFieldIsBlank() {
@@ -34,6 +33,15 @@ export default function CreateEmbeddings() {
       };
   }
 
+  function checkIfChunkSizeIsTooLarge() {
+    if (markdown.length > 4000)
+      return {
+        error: true,
+        type: "warning",
+        message: "Chunk size limit reached",
+      };
+  }
+
   const createEmbeddings = async () => {
     if (isLoading === false) setIsLoading(true);
 
@@ -47,11 +55,6 @@ export default function CreateEmbeddings() {
     });
   };
 
-  function handleMarkdownChange(value) {
-    if (value.length > 4000) setError("Chunk size limit reached");
-    setMarkdown(value);
-  }
-
   async function handleSubmit(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -61,34 +64,36 @@ export default function CreateEmbeddings() {
       return;
     }
 
+    if (checkIfChunkSizeIsTooLarge()) {
+      toggleNotification(checkIfChunkSizeIsTooLarge());
+      return;
+    }
+
     setIsLoading(true);
     await createEmbeddings();
     history.push("/plugins/" + pluginId + "/");
   }
 
   return (
-    <div className="container">
+    <ContentLayout>
       <Header
         title="Embeddings"
         subtitle={`Chunk Size: ${markdown.length}`}
         primaryAction={
-          <Button onClick={handleSubmit} disabled={isLoading || error}>
+          <Button onClick={handleSubmit} disabled={isLoading}>
             {isLoading ? "Creating Embeddings" : "Create Embeddings"}
           </Button>
         }
         navigationAction={<BackLink to={"/plugins/" + pluginId + "/"} />}
       />
-      <Box padding={8}>
-        <CreateEmbeddingsForm
-          onSubmit={handleSubmit}
-          isLoading={isLoading}
-          input={input}
-          setInput={setInput}
-          markdown={markdown}
-          handleMarkdownChange={handleMarkdownChange}
-          error={error}
-        />
-      </Box>
-    </div>
+      <CreateEmbeddingsForm
+        onSubmit={handleSubmit}
+        isLoading={isLoading}
+        input={input}
+        setInput={setInput}
+        markdown={markdown}
+        handleMarkdownChange={setMarkdown}
+      />
+    </ContentLayout>
   );
 }

@@ -103,10 +103,7 @@ export default function EmbeddingDetails() {
 
   if (!data?.id) return null;
 
-  console.log("data", data);
-
   const metadata = JSON.parse(data.embeddings)[0].metadata;
-  console.log("metadata", metadata);
 
   function renderMetadata(metadata) {
     return Object.entries(metadata).map(([key, value]) => (
@@ -119,7 +116,8 @@ export default function EmbeddingDetails() {
   }
 
   return (
-<ContentLayout>      <Header
+    <ContentLayout>
+      <Header
         title={data.title || "Embeddings Details"}
         subtitle={`Pinecone ID: ${data.embeddingsId}`}
         primaryAction={<ConfirmDeleteEmbedding callback={handleDelete} />}
