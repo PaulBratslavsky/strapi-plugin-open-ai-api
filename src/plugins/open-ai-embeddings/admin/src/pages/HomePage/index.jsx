@@ -4,8 +4,9 @@
  * HomePage
  *
  */
-
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
+import _ from "lodash";
+import qs from "qs";
 import { useFetchClient } from "@strapi/helper-plugin";
 import { useHistory } from "react-router-dom";
 import { EmptyStateLayout, Box, Button } from "@strapi/design-system";
@@ -15,7 +16,7 @@ import Illo from "../../components/Illo";
 import ButtonLink from "../../components/ButtonLink";
 import Header from "../../components/Header";
 import PluginTable from "../../components/Table";
-import Pagination  from "../../components/Pagination";
+import Search from "../../components/Search";
 
 function EmptyState() {
   const history = useHistory();
@@ -39,25 +40,56 @@ function EmptyState() {
   );
 }
 
+const query = (searchTerm) =>
+  qs.stringify({
+    filters: {
+      $or: [
+        {
+          title: {
+            $contains: searchTerm,
+          },
+        },
+        {
+          content: {
+            $contains: searchTerm,
+          },
+        },
+      ],
+    },
+  });
+
 export default function HomePage() {
   const { get } = useFetchClient();
-  const [data, setData] = useState([]);
+  const [embeddings, setEmbeddings] = useState([]);
+  const [search, setSearch] = useState("");
+
+  //TODO: LEARN MORE ABOUT DEBOUNCE
+  const fetchData = useCallback(
+    _.debounce(async (searchTerm) => {
+      const response = await get(
+        `/open-ai-embeddings/embeddings/find?${query(searchTerm)}`
+      );
+      setEmbeddings(response.data);
+    }, 500),
+    [get]
+  );
 
   useEffect(() => {
-    async function fetchData() {
-      const data = await get("/open-ai-embeddings/embeddings/find");
-      setData(data.data);
-    }
-    fetchData();
-  }, []);
+    fetchData(search);
+  }, [search, fetchData]);
 
-  if (data.length === 0) return <EmptyState />;
+  function handleSearchChange(event) {
+    event.preventDefault();
+    setSearch(event.target.value);
+  }
+  const { data, count } = embeddings;
+  if (count === 0) return <EmptyState />;
 
   return (
     <Box padding={8}>
       <Header
         title="Embeddings"
-        subtitle={`${data.length} results found`}
+        subtitle={`${count} results found`}
         primaryAction={
           <ButtonLink
             to={`/plugins/${pluginId}/embeddings`}
@@ -66,8 +98,12 @@ export default function HomePage() {
           />
         }
       />
+      <Search
+        search={search}
+        setSearch={setSearch}
+        onChange={handleSearchChange}
+      />
       <PluginTable data={data} />
-      <Pagination page={1} totalPages={26} basePath="/plugins/open-ai-embeddings/embeddings" />
     </Box>
   );
 }

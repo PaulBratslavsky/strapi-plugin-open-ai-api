@@ -2,9 +2,12 @@
 const pluginManager = require("../initialize");
 const { Document } = require("langchain/document");
 const { VectorDBQAChain } = require("langchain/chains");
-const { errors } = require("@strapi/utils");
-const { ApplicationError } = errors;
 
+const { sanitize } = require("@strapi/utils");
+const { contentAPI } = sanitize;
+
+// const { errors } = require("@strapi/utils");
+// const { ApplicationError } = errors;
 
 module.exports = ({ strapi }) => ({
   async createEmbedding(data) {
@@ -33,13 +36,11 @@ module.exports = ({ strapi }) => ({
     data.data.embeddingsId = ids[0];
     data.data.embeddings = toJason;
 
-    const response = await strapi.entityService.update(
+    return await strapi.entityService.update(
       "plugin::open-ai-embeddings.embedding",
       entity.id,
       data
     );
-
-    return response;
   },
   async deleteEmbedding(params) {
     const plugin = await pluginManager.getSettings();
@@ -73,7 +74,45 @@ module.exports = ({ strapi }) => ({
       }
     );
 
-    const response = await chain.call({ query: data.query });
-    return response;
+    return await chain.call({ query: data.query });
+  },
+  async getEmbedding(ctx) {
+    const contentType = strapi.contentType(
+      "plugin::open-ai-embeddings.embedding"
+    );
+    const sanitizedQueryParams = await contentAPI.query(
+      ctx.query,
+      contentType,
+      ctx.state.auth
+    );
+
+    return await strapi.entityService.findOne(
+      contentType.uid,
+      ctx.params.id,
+      sanitizedQueryParams
+    );
+  },
+
+  async getEmbeddings(ctx) {
+    const contentType = strapi.contentType(
+      "plugin::open-ai-embeddings.embedding"
+    );
+    const sanitizedQueryParams = await contentAPI.query(
+      ctx.query,
+      contentType,
+      ctx.state.auth
+    );
+
+    const count = await strapi.entityService.count(
+      contentType.uid,
+      sanitizedQueryParams
+    );
+
+    const data = await strapi.entityService.findMany(
+      contentType.uid,
+      sanitizedQueryParams
+    );
+
+    return { data, count };
   },
 });
