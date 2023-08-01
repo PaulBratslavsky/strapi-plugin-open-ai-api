@@ -9,7 +9,7 @@ import _ from "lodash";
 import qs from "qs";
 import { useFetchClient } from "@strapi/helper-plugin";
 import { useHistory } from "react-router-dom";
-import { EmptyStateLayout, Box, Button } from "@strapi/design-system";
+import { EmptyStateLayout, Box, Button, ContentLayout } from "@strapi/design-system";
 import { Plus } from "@strapi/icons";
 import pluginId from "../../pluginId";
 import Illo from "../../components/Illo";
@@ -86,7 +86,7 @@ export default function HomePage() {
   if (totalCount === 0) return <EmptyState />;
 
   return (
-    <Box padding={8}>
+    <ContentLayout padding={8}>
       <Header
         title="Embeddings"
         subtitle={`${count} results found`}
@@ -104,6 +104,6 @@ export default function HomePage() {
         onChange={handleSearchChange}
       />
       <PluginTable data={data} />
-    </Box>
+    </ContentLayout>
   );
 }

@@ -44,9 +44,7 @@ export default function PluginTable({ data }) {
             <Th>
               <Typography variant="sigma">Pinecone ID</Typography>
             </Th>
-            <Th>
-              <Typography variant="sigma">Data</Typography>
-            </Th>
+       
             <Th>
               <VisuallyHidden>Actions</VisuallyHidden>
             </Th>
@@ -69,12 +67,12 @@ export default function PluginTable({ data }) {
                   </Td>
                   <Td>
                     <Typography textColor="neutral800">
-                      {entry.title}
+                      {entry.title.slice(0, 30)}...
                     </Typography>
                   </Td>
                   <Td>
                     <Typography textColor="neutral800">
-                      {entry.content && entry.content.slice(0, 50)}...
+                      {entry.content && entry.content.slice(0, 30)}...
                     </Typography>
                   </Td>
                   <Td>
@@ -82,11 +80,7 @@ export default function PluginTable({ data }) {
                       {entry.embeddingsId && entry.embeddingsId}
                     </Typography>
                   </Td>
-                  <Td>
-                    <Typography textColor="neutral800">
-                      {entry.embeddings && entry.embeddings.slice(0, 25)}...
-                    </Typography>
-                  </Td>
+                 
                   <Td>
                     <Flex>
                       <Link

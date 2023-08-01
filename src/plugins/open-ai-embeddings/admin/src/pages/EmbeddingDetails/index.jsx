@@ -11,6 +11,7 @@ import {
   DialogFooter,
   Grid,
   GridItem,
+  ContentLayout,
 } from "@strapi/design-system";
 
 import { ExclamationMarkCircle, Trash, Plus } from "@strapi/icons";
@@ -118,8 +119,7 @@ export default function EmbeddingDetails() {
   }
 
   return (
-    <Box padding={8}>
-      <Header
+<ContentLayout>      <Header
         title={data.title || "Embeddings Details"}
         subtitle={`Pinecone ID: ${data.embeddingsId}`}
         primaryAction={<ConfirmDeleteEmbedding callback={handleDelete} />}
@@ -143,7 +143,6 @@ export default function EmbeddingDetails() {
           </GridItem>
         </Grid>
       </Box>
-      <Box padding={8}></Box>
-    </Box>
+    </ContentLayout>
   );
 }
